@@ -35,7 +35,11 @@ const SegmentationComponent = () => {
   }, [setCanvasSize]);
 
   const process = () => {
-    if (fileSelectRef.current && fileSelectRef.current.files && fileSelectRef.current.files[0]) {
+    if (fileURLRef.current && fileURLRef.current.value !== '') {
+      // https://i.imgur.com/CzXTtJV.jpg
+      processImage(fileURLRef.current.value)
+    }
+    else if (fileSelectRef.current && fileSelectRef.current.files && fileSelectRef.current.files[0]) {
       processForm()
     }
   }
@@ -43,24 +47,27 @@ const SegmentationComponent = () => {
   const processForm = async () => {
     var reader = new FileReader();
     reader.onload = async function () {
-      var data = this.result
-      var imageData = await Jimp.read(this.result).then((imageBuffer: Jimp) => {
-        setCanvasSize(imageBuffer.bitmap.height / imageBuffer.bitmap.width)
-        const imageData = new ImageData(new Uint8ClampedArray(imageBuffer.bitmap.data), imageBuffer.bitmap.width, imageBuffer.bitmap.height);
-        let c = document.createElement("canvas")
-        c.width = imageBuffer.bitmap.width
-        c.height = imageBuffer.bitmap.height
-        const ctx = c.getContext('2d');
-        ctx!.putImageData(imageData, 0, 0);
-        const canvas = canvasRef.current;
-        var destCtx = canvas!.getContext('2d');
-        destCtx!.drawImage(c, 0, 0, c.width, c.height, 0, 0, canvas!.width, canvas!.height);
-        return imageBuffer.resize(512, 512);
-      });
-      let tensor = imageDataToTensor(imageData, [1, 3, 512, 512])
-      await runInference(session, tensor)
+      processImage(this.result)
     }
     reader.readAsArrayBuffer(fileSelectRef.current.files[0])
+  }
+
+  const processImage = async (src) => {
+    var imageData = await Jimp.read(src).then((imageBuffer: Jimp) => {
+      setCanvasSize(imageBuffer.bitmap.height / imageBuffer.bitmap.width)
+      const imageData = new ImageData(new Uint8ClampedArray(imageBuffer.bitmap.data), imageBuffer.bitmap.width, imageBuffer.bitmap.height);
+      let c = document.createElement("canvas")
+      c.width = imageBuffer.bitmap.width
+      c.height = imageBuffer.bitmap.height
+      const ctx = c.getContext('2d');
+      ctx!.putImageData(imageData, 0, 0);
+      const canvas = canvasRef.current;
+      var destCtx = canvas!.getContext('2d');
+      destCtx!.drawImage(c, 0, 0, c.width, c.height, 0, 0, canvas!.width, canvas!.height);
+      return imageBuffer.resize(512, 512);
+    });
+    let tensor = imageDataToTensor(imageData, [1, 3, 512, 512])
+    await runInference(session, tensor)
   }
 
   function imageDataToTensor(image: Jimp, dims: number[]): Tensor {
