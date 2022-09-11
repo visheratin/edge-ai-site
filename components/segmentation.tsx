@@ -5,6 +5,7 @@ import { useSessionContext } from "../pages/sessionContext";
 import * as ort from 'onnxruntime-web';
 import { segmentationModels } from "../data/segmentation";
 import SelectModel from "./selectModel";
+import ColorSchema from "./colorSchema";
 
 const SegmentationComponent = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -147,22 +148,34 @@ const SegmentationComponent = () => {
           <canvas className="purple lighten-5" ref={canvasRef} width={dims.width} height={dims.height} />
         </div>
         <div className="col l6 m6 s12 center-align">
-          <form action="#">
-            <div className="input-field">
-              <input ref={fileURLRef} placeholder="Paste image link" type="text" className="validate" />
+          <div className="row">
+            <div className="col s12">
+              <h6 className="left-align">Select the data</h6>
+              <form action="#">
+                <div className="input-field">
+                  <input ref={fileURLRef} placeholder="Paste image link" type="text" className="validate" />
+                </div>
+                <div>OR</div>
+                <div className="file-field input-field">
+                  <div className="btn">
+                    <span>File</span>
+                    <input ref={fileSelectRef} type="file" />
+                  </div>
+                  <div className="file-path-wrapper">
+                    <input className="file-path validate" type="text" placeholder="Select a file" />
+                  </div>
+                </div>
+                <button className="btn waves-effect waves-light" onClick={process}>Generate</button>
+              </form>
             </div>
-            <div>OR</div>
-            <div className="file-field input-field">
-              <div className="btn">
-                <span>File</span>
-                <input ref={fileSelectRef} type="file" />
-              </div>
-              <div className="file-path-wrapper">
-                <input className="file-path validate" type="text" placeholder="Select a file" />
-              </div>
+          </div>
+          <div className="row">
+            <div className="col s12">
+              {
+                sessionInfo !== null && <ColorSchema classes={sessionInfo.meta.classes} />
+              }
             </div>
-          </form>
-          <button className="btn waves-effect waves-light" onClick={process}>Generate</button>
+          </div>
         </div>
       </div>
     </>

@@ -1,7 +1,11 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, Dispatch, SetStateAction, useContext, useState } from "react";
 import { SessionInfo } from "../data/sessionInfo";
 
-const defaultState: SessionInfo = {};
+const defaultState: SessionInfo = {
+  meta: {
+    classes: []
+  }
+};
 
 const SessionContext = createContext<SessionInfo>(defaultState);
 
@@ -14,6 +18,6 @@ export function ORTSessionProvider({ children }) {
   );
 }
 
-export function useSessionContext() {
+export function useSessionContext(): SessionInfo {
   return useContext(SessionContext);
 }
