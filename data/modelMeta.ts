@@ -3,7 +3,7 @@ export interface modelClass {
     color: number[]
 }
 
-export interface modelMetadata {
+export interface ModelMetadata {
     title: string
     modelPath: string
     classes: modelClass[]

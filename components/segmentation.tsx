@@ -4,6 +4,7 @@ import { Tensor } from 'onnxruntime-web';
 import { useSessionContext } from "../pages/sessionContext";
 import * as ort from 'onnxruntime-web';
 import { segmentationModels } from "../data/segmentation";
+import SelectModel from "./selectModel";
 
 const SegmentationComponent = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -11,9 +12,7 @@ const SegmentationComponent = () => {
   const fileSelectRef = useRef<HTMLInputElement>(null)
   const fileURLRef = useRef<HTMLInputElement>(null)
   const [dims, setCanvasDims] = useState({ width: 0, height: 0, aspectRatio: 1 })
-  const [loader, setLoader] = useState({ hidden: true })
-  const [session, setSession] = useSessionContext()
-  const modelSelectRef = useRef<HTMLSelectElement>(null)
+  const [sessionInfo, _] = useSessionContext()
 
   const setCanvasSize = (aspectRatio: number = 1) => {
     if (canvasRef.current && canvasContainerRef.current) {
@@ -35,27 +34,6 @@ const SegmentationComponent = () => {
     window.addEventListener('resize', setCanvasSize);
     return () => window.removeEventListener('resize', setCanvasSize);
   }, [setCanvasSize]);
-
-  const loadModel = async () => {
-    const modelPath = modelSelectRef.current?.selectedOptions[0].value
-    if (modelPath === "") {
-      return
-    }
-    setLoader({ hidden: false })
-    const start = new Date();
-    const session = await ort.InferenceSession.create(
-      modelPath,
-      {
-        executionProviders: ['wasm'],
-        graphOptimizationLevel: 'all'
-      }
-    );
-    const end = new Date();
-    const inferenceTime = (end.getTime() - start.getTime()) / 1000;
-    console.log(`Inference session created in ${inferenceTime} seconds`)
-    setLoader({ hidden: true })
-    setSession(session)
-  }
 
   const process = () => {
     if (fileURLRef.current && fileURLRef.current.value !== '') {
@@ -90,7 +68,7 @@ const SegmentationComponent = () => {
       return imageBuffer.resize(512, 512);
     });
     let tensor = imageDataToTensor(imageData, [1, 3, 512, 512])
-    await runInference(session, tensor)
+    await runInference(sessionInfo.session, tensor)
   }
 
   function imageDataToTensor(image: Jimp, dims: number[]): Tensor {
@@ -166,40 +144,7 @@ const SegmentationComponent = () => {
 
   return (
     <>
-      <div className="row">
-        <div className="col l9 s12">
-          <form action="#">
-            <div className="input-field">
-              <select ref={modelSelectRef} className="browser-default" id="modelSelect">
-                <option value="" disabled selected>Select the model</option>
-                {segmentationModels.map((e, key) => {
-                  return <option key={key} value={e.modelPath}>{e.title}</option>
-                })}
-              </select>
-            </div>
-          </form>
-        </div>
-        <div className="col l2 s12">
-          <div className="input-field">
-            <button className="btn waves-effect waves-light" style={{ width: "100%" }} onClick={loadModel}>Load</button>
-          </div>
-        </div>
-        <div className="col l1 s12 input-field center-align">
-          <div className={loader.hidden ? "hide" : ""}>
-            <div className="preloader-wrapper small active">
-              <div className="spinner-layer spinner-green-only">
-                <div className="circle-clipper left">
-                  <div className="circle"></div>
-                </div><div className="gap-patch">
-                  <div className="circle"></div>
-                </div><div className="circle-clipper right">
-                  <div className="circle"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <SelectModel models={segmentationModels} />
       <div className="row">
         <div ref={canvasContainerRef} className="col l6 m6 s12">
           <canvas className="purple lighten-5" ref={canvasRef} width={dims.width} height={dims.height} />

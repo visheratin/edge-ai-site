@@ -1,6 +1,6 @@
-import { modelMetadata } from "./modelMeta";
+import { ModelMetadata } from "./modelMeta";
 
-export const segmentationModels: modelMetadata[] = [
+export const segmentationModels: ModelMetadata[] = [
     {
         title: "Small model",
         modelPath: "/_next/static/chunks/pages/model_quant.onnx",
