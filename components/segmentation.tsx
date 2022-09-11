@@ -37,7 +37,6 @@ const SegmentationComponent = () => {
 
   const process = () => {
     if (fileURLRef.current && fileURLRef.current.value !== '') {
-      // https://i.imgur.com/CzXTtJV.jpg
       processImage(fileURLRef.current.value)
     }
     else if (fileSelectRef.current && fileSelectRef.current.files && fileSelectRef.current.files[0]) {
@@ -53,7 +52,7 @@ const SegmentationComponent = () => {
     reader.readAsArrayBuffer(fileSelectRef.current.files[0])
   }
 
-  const processImage = async (src) => {
+  const processImage = async (src: any) => {
     var imageData = await Jimp.read(src).then((imageBuffer: Jimp) => {
       setCanvasSize(imageBuffer.bitmap.height / imageBuffer.bitmap.width)
       const imageData = new ImageData(new Uint8ClampedArray(imageBuffer.bitmap.data), imageBuffer.bitmap.width, imageBuffer.bitmap.height);
@@ -67,11 +66,11 @@ const SegmentationComponent = () => {
       destCtx!.drawImage(c, 0, 0, c.width, c.height, 0, 0, canvas!.width, canvas!.height);
       return imageBuffer.resize(512, 512);
     });
-    let tensor = imageDataToTensor(imageData, [1, 3, 512, 512])
+    const tensor = imageDataToTensor(imageData, [1, 3, 512, 512])
     await runInference(sessionInfo.session, tensor)
   }
 
-  function imageDataToTensor(image: Jimp, dims: number[]): Tensor {
+  const imageDataToTensor = (image: Jimp, dims: number[]): Tensor => {
     var imageBufferData = image.bitmap.data;
     const [redArray, greenArray, blueArray] = new Array(new Array<number>(), new Array<number>(), new Array<number>());
     for (let i = 0; i < imageBufferData.length; i += 4) {
@@ -89,21 +88,21 @@ const SegmentationComponent = () => {
     return inputTensor;
   }
 
-  async function runInference(session: ort.InferenceSession, preprocessedData: any): Promise<[any, number]> {
+  const runInference = async (session: ort.InferenceSession, tensor: any) => {
     const start = new Date();
     const feeds: Record<string, ort.Tensor> = {};
-    feeds[session.inputNames[0]] = preprocessedData;
+    feeds[session.inputNames[0]] = tensor;
     const outputData = await session.run(feeds);
     const end = new Date();
     const inferenceTime = (end.getTime() - start.getTime()) / 1000;
     const output = outputData[session.outputNames[0]];
-    console.log(output, inferenceTime)
+    console.log(inferenceTime)
     outputToCanvas(output)
   }
 
   const outputToCanvas = async (output: Tensor) => {
     let i = 0
-    const size = 16384 * 4
+    const size = 128 * 128 * 4
     const arrayBuffer = new ArrayBuffer(size);
     const pixels = new Uint8ClampedArray(arrayBuffer);
     let idx = 0
@@ -112,27 +111,11 @@ const SegmentationComponent = () => {
     c.height = 128
     for (i = 0; i < size; i += 4) {
       idx = Math.floor(i / 4)
-      if (output.data[idx] > output.data[idx + 16384] && output.data[idx] > output.data[idx + 32768]) {
-        pixels[i] = 0;
-        pixels[i + 1] = 0;
-        pixels[i + 2] = 0;
-        pixels[i + 3] = 0;
-        continue
-      }
-      if (output.data[idx + 16384] > output.data[idx] && output.data[idx + 16384] > output.data[idx + 32768]) {
-        pixels[i] = 163;
-        pixels[i + 1] = 255;
-        pixels[i + 2] = 0;
-        pixels[i + 3] = 100;
-        continue
-      }
-      if (output.data[idx + 32768] > output.data[idx + 16384] && output.data[idx + 32768] > output.data[idx + 16384]) {
-        pixels[i] = 245;
-        pixels[i + 1] = 0;
-        pixels[i + 2] = 255;
-        pixels[i + 3] = 100;
-        continue
-      }
+      const color = pixelArgMax(output, idx)
+      pixels[i] = color[0];
+      pixels[i + 1] = color[1];
+      pixels[i + 2] = color[2];
+      pixels[i + 3] = color[3];
     }
     const imageData = new ImageData(pixels, 128, 128);
     const ctx = c.getContext('2d');
@@ -140,6 +123,20 @@ const SegmentationComponent = () => {
     const canvas = canvasRef.current;
     var destCtx = canvas!.getContext('2d');
     destCtx!.drawImage(c, 0, 0, c.width, c.height, 0, 0, canvas!.width, canvas!.height);
+  }
+
+  const pixelArgMax = (tensor: Tensor, idx: number): number[] => {
+    const classes = sessionInfo.meta.classes
+    let maxIdx = 0
+    let maxValue = -1000
+    const size = 16384
+    for (let i = 0; i < classes.length; i++) {
+      if (tensor.data[idx + i * size] > maxValue) {
+        maxValue = tensor.data[idx + i * size]
+        maxIdx = i
+      }
+    }
+    return classes[maxIdx].color
   }
 
   return (
