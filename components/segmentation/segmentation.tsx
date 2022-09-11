@@ -1,11 +1,12 @@
 import Jimp from "jimp";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Tensor } from 'onnxruntime-web';
-import { useSessionContext } from "../pages/sessionContext";
+import { useSessionContext } from "../../pages/sessionContext";
 import * as ort from 'onnxruntime-web';
-import { segmentationModels } from "../data/segmentation";
-import SelectModel from "./selectModel";
+import { segmentationModels } from "../../data/segmentation";
+import SelectModel from "../selectModel";
 import ColorSchema from "./colorSchema";
+import ExampleImages from "./exampleImages";
 
 const SegmentationComponent = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -13,6 +14,7 @@ const SegmentationComponent = () => {
   const fileSelectRef = useRef<HTMLInputElement>(null)
   const fileURLRef = useRef<HTMLInputElement>(null)
   const [dims, setCanvasDims] = useState({ width: 0, height: 0, aspectRatio: 1 })
+  const [fileURL, setFileURL] = useState({ value: "" })
   const [sessionInfo, _] = useSessionContext()
 
   const setCanvasSize = (aspectRatio: number = 1) => {
@@ -153,7 +155,7 @@ const SegmentationComponent = () => {
               <h6 className="left-align">Select the data</h6>
               <form action="#">
                 <div className="input-field">
-                  <input ref={fileURLRef} placeholder="Paste image link" type="text" className="validate" />
+                  <input ref={fileURLRef} placeholder="Paste image link" type="text" className="validate" value={fileURL.value} />
                 </div>
                 <div>OR</div>
                 <div className="file-field input-field">
@@ -165,14 +167,21 @@ const SegmentationComponent = () => {
                     <input className="file-path validate" type="text" placeholder="Select a file" />
                   </div>
                 </div>
-                <button className="btn waves-effect waves-light" onClick={process}>Generate</button>
               </form>
+              <button className="btn waves-effect waves-light" onClick={process}>Generate</button>
             </div>
           </div>
           <div className="row">
             <div className="col s12">
               {
                 sessionInfo !== null && <ColorSchema classes={sessionInfo.meta.classes} />
+              }
+            </div>
+          </div>
+          <div className="row">
+            <div className="col s12">
+              {
+                sessionInfo !== null && <ExampleImages imageURLs={sessionInfo.meta.examples} setImageFunc={setFileURL} />
               }
             </div>
           </div>

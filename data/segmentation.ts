@@ -17,6 +17,11 @@ export const segmentationModels: ModelMetadata[] = [
                 name: "Left-handed",
                 color: [245, 0, 255, 100]
             }
+        ],
+        examples: [
+            "/sem-segment/image-1.png",
+            "/sem-segment/image-2.png",
+            "/sem-segment/image-3.png"
         ]
     },
     {
@@ -35,6 +40,11 @@ export const segmentationModels: ModelMetadata[] = [
                 name: "Left-handed",
                 color: [245, 0, 255, 100]
             }
+        ],
+        examples: [
+            "/sem-segment/image-1.png",
+            "/sem-segment/image-2.png",
+            "/sem-segment/image-3.png"
         ]
     }
 ]

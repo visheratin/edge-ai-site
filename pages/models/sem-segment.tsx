@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import SegmentationComponent from '../../components/segmentation'
+import SegmentationComponent from '../../components/segmentation/segmentation'
 
 
 const SEMSegmentation: NextPage = () => {

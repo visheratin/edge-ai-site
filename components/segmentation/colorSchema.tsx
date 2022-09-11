@@ -1,17 +1,14 @@
-import { modelClass } from "../data/modelMeta"
-import { useSessionContext } from "../pages/sessionContext"
+import { modelClass } from "../../data/modelMeta"
 
 interface ColorSchemaProps {
   classes: modelClass[]
 }
 
 const ColorSchema = (props: ColorSchemaProps) => {
-  const sessionInfo = useSessionContext()
-
   return (
     <>
       <h6 className="left-align">Color schema</h6>
-      <table>
+      <table className="centered">
         <thead>
           <tr>
             <th>Color</th>
