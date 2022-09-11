@@ -2,16 +2,18 @@ import Jimp from "jimp";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Tensor } from 'onnxruntime-web';
 import { useSessionContext } from "../pages/sessionContext";
-import ORTSession from "./session"
 import * as ort from 'onnxruntime-web';
+import { segmentationModels } from "../data/segmentation";
 
 const SegmentationComponent = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const canvasContainerRef = useRef<HTMLDivElement>(null);
-  const fileSelectRef = useRef<HTMLInputElement>(null);
-  const fileURLRef = useRef<HTMLInputElement>(null);
-  const [dims, setCanvasDims] = useState({ width: 0, height: 0, aspectRatio: 1 });
-  const [session, _] = useSessionContext()
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const canvasContainerRef = useRef<HTMLDivElement>(null)
+  const fileSelectRef = useRef<HTMLInputElement>(null)
+  const fileURLRef = useRef<HTMLInputElement>(null)
+  const [dims, setCanvasDims] = useState({ width: 0, height: 0, aspectRatio: 1 })
+  const [loader, setLoader] = useState({ hidden: true })
+  const [session, setSession] = useSessionContext()
+  const modelSelectRef = useRef<HTMLSelectElement>(null)
 
   const setCanvasSize = (aspectRatio: number = 1) => {
     if (canvasRef.current && canvasContainerRef.current) {
@@ -33,6 +35,27 @@ const SegmentationComponent = () => {
     window.addEventListener('resize', setCanvasSize);
     return () => window.removeEventListener('resize', setCanvasSize);
   }, [setCanvasSize]);
+
+  const loadModel = async () => {
+    const modelPath = modelSelectRef.current?.selectedOptions[0].value
+    if (modelPath === "") {
+      return
+    }
+    setLoader({ hidden: false })
+    const start = new Date();
+    const session = await ort.InferenceSession.create(
+      modelPath,
+      {
+        executionProviders: ['wasm'],
+        graphOptimizationLevel: 'all'
+      }
+    );
+    const end = new Date();
+    const inferenceTime = (end.getTime() - start.getTime()) / 1000;
+    console.log(`Inference session created in ${inferenceTime} seconds`)
+    setLoader({ hidden: true })
+    setSession(session)
+  }
 
   const process = () => {
     if (fileURLRef.current && fileURLRef.current.value !== '') {
@@ -102,42 +125,10 @@ const SegmentationComponent = () => {
 
   const outputToCanvas = async (output: Tensor) => {
     let i = 0
-    // const size = dims.width * dims.height
     const size = 16384 * 4
-    // const ratio = size / 16384
     const arrayBuffer = new ArrayBuffer(size);
     const pixels = new Uint8ClampedArray(arrayBuffer);
     let idx = 0
-    // let ox, oy = 0
-    // for (let y = 0; y < dims.height; y++) {
-    //   for (let x = 0; x < dims.width; x++) {
-    //     i = (y * dims.width + x) * 4
-    //     ox = Math.floor(x / dims.width * 128)
-    //     oy = Math.floor(y / dims.height * 128)
-    //     idx = (oy * 128 + ox)
-    //     if (output.data[idx] > output.data[idx + 16384] && output.data[idx] > output.data[idx + 32768]) {
-    //       pixels[i] = 0;
-    //       pixels[i + 1] = 0;
-    //       pixels[i + 2] = 0;
-    //       pixels[i + 3] = 0;
-    //       continue
-    //     }
-    //     if (output.data[idx + 16384] > output.data[idx] && output.data[idx + 16384] > output.data[idx + 32768]) {
-    //       pixels[i] = 163;
-    //       pixels[i + 1] = 255;
-    //       pixels[i + 2] = 0;
-    //       pixels[i + 3] = 255;
-    //       continue
-    //     }
-    //     if (output.data[idx + 32768] > output.data[idx + 16384] && output.data[idx + 32768] > output.data[idx + 16384]) {
-    //       pixels[i] = 245;
-    //       pixels[i + 1] = 0;
-    //       pixels[i + 2] = 255;
-    //       pixels[i + 3] = 255;
-    //       continue
-    //     }
-    //   }
-    // }
     let c = document.createElement("canvas")
     c.width = 128
     c.height = 128
@@ -175,7 +166,40 @@ const SegmentationComponent = () => {
 
   return (
     <>
-      <ORTSession modelPath={"/_next/static/chunks/pages/model_quant.onnx"} />
+      <div className="row">
+        <div className="col l9 s12">
+          <form action="#">
+            <div className="input-field">
+              <select ref={modelSelectRef} className="browser-default" id="modelSelect">
+                <option value="" disabled selected>Select the model</option>
+                {segmentationModels.map((e, key) => {
+                  return <option key={key} value={e.modelPath}>{e.title}</option>
+                })}
+              </select>
+            </div>
+          </form>
+        </div>
+        <div className="col l2 s12">
+          <div className="input-field">
+            <button className="btn waves-effect waves-light" style={{ width: "100%" }} onClick={loadModel}>Load</button>
+          </div>
+        </div>
+        <div className="col l1 s12 input-field center-align">
+          <div className={loader.hidden ? "hide" : ""}>
+            <div className="preloader-wrapper small active">
+              <div className="spinner-layer spinner-green-only">
+                <div className="circle-clipper left">
+                  <div className="circle"></div>
+                </div><div className="gap-patch">
+                  <div className="circle"></div>
+                </div><div className="circle-clipper right">
+                  <div className="circle"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="row">
         <div ref={canvasContainerRef} className="col l6 m6 s12">
           <canvas className="purple lighten-5" ref={canvasRef} width={dims.width} height={dims.height} />
@@ -196,7 +220,7 @@ const SegmentationComponent = () => {
               </div>
             </div>
           </form>
-          <button className="btn waves-effect waves-light center-align" onClick={process}>Generate</button>
+          <button className="btn waves-effect waves-light" onClick={process}>Generate</button>
         </div>
       </div>
     </>
