@@ -6,7 +6,7 @@ interface ExampleImagesProps {
 }
 
 const ExampleImages = (props: ExampleImagesProps) => {
-  const setImage = (e) => {
+  const setImage = (e: any) => {
     props.setImageFunc(e.target.src)
   }
 
