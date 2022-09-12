@@ -14,8 +14,8 @@ const SegmentationComponent = () => {
   const fileSelectRef = useRef<HTMLInputElement>(null)
   const fileURLRef = useRef<HTMLInputElement>(null)
   const [dims, setCanvasDims] = useState({ width: 0, height: 0, aspectRatio: 1 })
-  const [fileURL, setFileURL] = useState({ value: "" })
   const [sessionInfo, _] = useSessionContext()
+  const [imageData, setImageData] = useState({ data: null })
 
   const setCanvasSize = (aspectRatio: number = 1) => {
     if (canvasRef.current && canvasContainerRef.current) {
@@ -40,22 +40,18 @@ const SegmentationComponent = () => {
 
   const process = () => {
     if (fileURLRef.current && fileURLRef.current.value !== '') {
-      processImage(fileURLRef.current.value)
+      loadImage(fileURLRef.current.value)
     }
     else if (fileSelectRef.current && fileSelectRef.current.files && fileSelectRef.current.files[0]) {
-      processForm()
+      var reader = new FileReader();
+      reader.onload = async function () {
+        loadImage(this.result)
+      }
+      reader.readAsArrayBuffer(fileSelectRef.current.files[0])
     }
   }
 
-  const processForm = async () => {
-    var reader = new FileReader();
-    reader.onload = async function () {
-      processImage(this.result)
-    }
-    reader.readAsArrayBuffer(fileSelectRef.current.files[0])
-  }
-
-  const processImage = async (src: any) => {
+  const loadImage = async (src: any) => {
     var imageData = await Jimp.read(src).then((imageBuffer: Jimp) => {
       setCanvasSize(imageBuffer.bitmap.height / imageBuffer.bitmap.width)
       const imageData = new ImageData(new Uint8ClampedArray(imageBuffer.bitmap.data), imageBuffer.bitmap.width, imageBuffer.bitmap.height);
@@ -69,8 +65,12 @@ const SegmentationComponent = () => {
       destCtx!.drawImage(c, 0, 0, c.width, c.height, 0, 0, canvas!.width, canvas!.height);
       return imageBuffer.resize(512, 512);
     });
-    const tensor = imageDataToTensor(imageData, [1, 3, 512, 512])
-    await runInference(sessionInfo.session, tensor)
+    setImageData({ data: imageData })
+  }
+
+  const processImage = () => {
+    const tensor = imageDataToTensor(imageData.data, [1, 3, 512, 512])
+    runInference(sessionInfo.session, tensor)
   }
 
   const imageDataToTensor = (image: Jimp, dims: number[]): Tensor => {
@@ -155,7 +155,7 @@ const SegmentationComponent = () => {
               <h6 className="left-align">Select the data</h6>
               <form action="#">
                 <div className="input-field">
-                  <input ref={fileURLRef} placeholder="Paste image link" type="text" className="validate" value={fileURL.value} />
+                  <input ref={fileURLRef} placeholder="Paste image link" type="text" className="validate" />
                 </div>
                 <div>OR</div>
                 <div className="file-field input-field">
@@ -168,7 +168,19 @@ const SegmentationComponent = () => {
                   </div>
                 </div>
               </form>
-              <button className="btn waves-effect waves-light" onClick={process}>Generate</button>
+              <div className="row">
+                <div className="col l6 m6 s12">
+                  <button className="btn col s12 waves-effect waves-light" onClick={process}>Set</button>
+                </div>
+                <div className="col l6 m6 s12">
+                  <button
+                    className="btn col s12 waves-effect waves-light"
+                    disabled={imageData.data === null || sessionInfo === null}
+                    onClick={processImage}>
+                    Generate
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
           <div className="row">
@@ -181,7 +193,7 @@ const SegmentationComponent = () => {
           <div className="row">
             <div className="col s12">
               {
-                sessionInfo !== null && <ExampleImages imageURLs={sessionInfo.meta.examples} setImageFunc={setFileURL} />
+                sessionInfo !== null && <ExampleImages imageURLs={sessionInfo.meta.examples} setImageFunc={loadImage} />
               }
             </div>
           </div>
