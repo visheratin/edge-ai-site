@@ -33,10 +33,10 @@ const SegmentationComponent = () => {
     setCanvasSize()
   }, []);
 
-  useEffect(() => {
-    window.addEventListener('resize', setCanvasSize);
-    return () => window.removeEventListener('resize', setCanvasSize);
-  }, [setCanvasSize]);
+  // useEffect(() => {
+  //   window.addEventListener('resize', setCanvasSize);
+  //   return () => window.removeEventListener('resize', setCanvasSize);
+  // }, [setCanvasSize]);
 
   const process = () => {
     if (fileURLRef.current && fileURLRef.current.value !== '') {
