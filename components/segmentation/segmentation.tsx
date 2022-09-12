@@ -170,13 +170,23 @@ const SegmentationComponent = () => {
               </form>
               <div className="row">
                 <div className="col l6 m6 s12">
-                  <button className="btn col s12 waves-effect waves-light" onClick={process}>Set</button>
+                  <button
+                    className="btn col s12 waves-effect waves-light"
+                    onClick={process}
+                    style={{
+                      marginTop: "5px"
+                    }}>
+                    Set
+                  </button>
                 </div>
                 <div className="col l6 m6 s12">
                   <button
                     className="btn col s12 waves-effect waves-light"
                     disabled={imageData.data === null || sessionInfo === null}
-                    onClick={processImage}>
+                    onClick={processImage}
+                    style={{
+                      marginTop: "5px"
+                    }}>
                     Generate
                   </button>
                 </div>
