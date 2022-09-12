@@ -1,7 +1,7 @@
 import Jimp from "jimp";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Tensor } from 'onnxruntime-web';
-import { useSessionContext } from "../../pages/sessionContext";
+import { useSessionContext } from "../sessionContext";
 import * as ort from 'onnxruntime-web';
 import { segmentationModels } from "../../data/segmentation";
 import SelectModel from "../selectModel";

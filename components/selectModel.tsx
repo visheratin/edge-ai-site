@@ -1,6 +1,6 @@
 import { useRef, useState } from "react"
 import { ModelMetadata } from "../data/modelMeta"
-import { useSessionContext } from "../pages/sessionContext"
+import { useSessionContext } from "./sessionContext"
 import * as ort from 'onnxruntime-web';
 import { SessionInfo } from "../data/sessionInfo"
 
