@@ -25,7 +25,10 @@ const ModelSelect = (props: ModelSelectProps) => {
       modelPath,
       {
         executionProviders: ['wasm'],
-        graphOptimizationLevel: 'all'
+        graphOptimizationLevel: 'all',
+        enableCpuMemArena: true,
+        enableMemPattern: true,
+        executionMode: 'parallel'
       }
     );
     const end = new Date();
