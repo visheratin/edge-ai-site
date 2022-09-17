@@ -20,9 +20,10 @@ const ModelSelect = (props: ModelSelectProps) => {
       return
     }
     setLoader({ hidden: false })
+    const model_data = await fetch(modelPath).then(resp => resp.arrayBuffer())
     const start = new Date();
     const session = await ort.InferenceSession.create(
-      modelPath,
+      model_data,
       {
         executionProviders: ['wasm'],
         graphOptimizationLevel: 'all',
