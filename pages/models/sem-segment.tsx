@@ -1,10 +1,11 @@
 import type { NextPage } from 'next';
 import SegmentationComponent from '../../components/segmentation/segmentation'
+import { ORTSessionProvider } from '../../components/sessionContext'
 
 
 const SEMSegmentation: NextPage = () => {
   return (
-    <>
+    <ORTSessionProvider>
       <div className="container">
         <div className="row">
           <h1 className="header">Microscopy images segmentation</h1>
@@ -18,7 +19,7 @@ const SEMSegmentation: NextPage = () => {
           <SegmentationComponent />
         </div>
       </div>
-    </>
+    </ORTSessionProvider>
   )
 }
 

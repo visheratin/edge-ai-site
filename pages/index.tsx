@@ -20,8 +20,8 @@ const Home: NextPage = () => {
               <Image src={bowtiePic} />
             </div>
             <div className="card-content">
-              <p>I am a very simple card. I am good at containing small bits of information.
-                I am convenient because I require little markup to use effectively.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque convallis ligula nec mi fringilla, in egestas lacus lobortis.
+                Donec non viverra diam. Proin convallis enim ac velit iaculis, non venenatis dui eleifend.</p>
             </div>
             <div className="card-action">
               <a href="models/sem-segment">Open demo</a>

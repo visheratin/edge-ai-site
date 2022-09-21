@@ -1,3 +1,6 @@
+/**
+  ModelSelect component
+*/
 import { useRef, useState } from "react"
 import { ModelMetadata } from "../data/modelMeta"
 import { useSessionContext } from "./sessionContext"
