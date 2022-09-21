@@ -4,6 +4,9 @@ import { useSessionContext } from "./sessionContext"
 import * as ort from 'onnxruntime-web';
 import { SessionInfo } from "../data/sessionInfo"
 
+ort.env.wasm.numThreads = 3
+ort.env.wasm.simd = true
+
 interface ModelSelectProps {
   models: ModelMetadata[]
 }
@@ -35,12 +38,12 @@ const ModelSelect = (props: ModelSelectProps) => {
     const end = new Date();
     const inferenceTime = (end.getTime() - start.getTime()) / 1000;
     console.log(`Inference session created in ${inferenceTime} seconds`)
-    setLoader({ hidden: true })
     const info: SessionInfo = {
       session: session,
       meta: props.models[selectedIdx - 1]
     }
     setSessionInfo(info)
+    setLoader({ hidden: true })
   }
 
   return (
