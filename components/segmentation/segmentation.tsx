@@ -230,7 +230,7 @@ const SegmentationComponent = () => {
                         <input ref={fileSelectRef} type="file" />
                       </div>
                       <div className="file-path-wrapper">
-                        <input className="file-path validate" type="text" placeholder="Select a file" />
+                        <input className="file-path validate" type="text" placeholder="Select or drop a file" />
                       </div>
                     </div>
                   </div>
@@ -256,9 +256,9 @@ const SegmentationComponent = () => {
                     disabled={imageData.data === null || sessionInfo === null}
                     onClick={processImage}
                     style={{
-                      marginTop: "5px"
+                      marginTop: "10px"
                     }}>
-                    Generate
+                    Generate segments
                   </button>
                 </div>
               </div>

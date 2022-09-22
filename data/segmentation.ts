@@ -2,7 +2,7 @@ import { ModelMetadata } from "./modelMeta";
 
 export const segmentationModels: ModelMetadata[] = [
     {
-        title: "Small model",
+        title: "Small model (4 MB)",
         models: new Map<string, string>([
             ["segment-model", "/_next/static/chunks/pages/model-small.onnx"],
         ]),
@@ -27,7 +27,7 @@ export const segmentationModels: ModelMetadata[] = [
         ]
     },
     {
-        title: "Larger model",
+        title: "Larger model (14 MB)",
         models: new Map<string, string>([
             ["segment-model", "/_next/static/chunks/pages/model-larger.onnx"],
         ]),
@@ -52,7 +52,7 @@ export const segmentationModels: ModelMetadata[] = [
         ]
     },
     {
-        title: "Large model",
+        title: "Large model (85 MB)",
         models: new Map<string, string>([
             ["segment-model", "/_next/static/chunks/pages/model-large.onnx"],
         ]),
