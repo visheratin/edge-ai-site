@@ -15,7 +15,7 @@ const ExampleImages = (props: ExampleImagesProps) => {
 
   return (
     <>
-      <h6 className="left-align">Example images</h6>
+      <h6 className="left-align">Example images (click to set the image)</h6>
       <div className="row">
         {
           props && props.imageURLs.map((url, key) => {

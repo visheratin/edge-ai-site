@@ -34,7 +34,7 @@ const ModelSelect = (props: ModelSelectProps) => {
     );
     const end = new Date();
     const elapsed = (end.getTime() - start.getTime()) / 1000;
-    console.log(`Inference session created in ${elapsed} seconds.`)
+    console.log(`Session creation time: ${elapsed} seconds.`)
     return session
   }
 

@@ -47,17 +47,14 @@ const SegmentationComponent = () => {
     setCanvasSize()
   }, []);
 
-  /**
-   * setImage checks what source of image is set and loads the image data accordingly.
-   * The order is:
-   * 1. URL input field.
-   * 2. File selector.
-   */
-  const selectImage = () => {
+  const selectURLImage = () => {
     if (fileURLRef.current && fileURLRef.current.value !== '') {
       loadImage(fileURLRef.current.value)
     }
-    else if (fileSelectRef.current && fileSelectRef.current.files && fileSelectRef.current.files[0]) {
+  }
+
+  const selectFileImage = () => {
+    if (fileSelectRef.current && fileSelectRef.current.files && fileSelectRef.current.files[0]) {
       var reader = new FileReader();
       reader.onload = async () => {
         loadImage(reader.result)
@@ -95,6 +92,12 @@ const SegmentationComponent = () => {
     }
   }
 
+  /**
+   * imageDataToTensor converts Jimp image to ORT tensor
+   * @param image instance of Jimp image
+   * @param dims target dimensions of the tensor
+   * @returns ORT tensor
+   */
   const imageDataToTensor = (image: Jimp, dims: number[]): Tensor => {
     var imageBufferData = image.bitmap.data;
     const [redArray, greenArray, blueArray] = new Array(new Array<number>(), new Array<number>(), new Array<number>());
@@ -113,7 +116,7 @@ const SegmentationComponent = () => {
     return inputTensor;
   }
 
-  const runInference = async (session: ort.InferenceSession, tensor: any) => {
+  const runInference = async (session: ort.InferenceSession, tensor: Tensor) => {
     const start = new Date();
     const feeds: Record<string, ort.Tensor> = {};
     feeds[session.inputNames[0]] = tensor;
@@ -121,11 +124,15 @@ const SegmentationComponent = () => {
     const end = new Date();
     const elapsed = (end.getTime() - start.getTime()) / 1000;
     const output = outputData[session.outputNames[0]];
-    console.log(elapsed)
-    outputToCanvas(output)
+    console.log(`Inference time: ${elapsed} seconds.`)
+    drawOnCanvas(output)
   }
 
-  const outputToCanvas = async (output: Tensor) => {
+  /**
+   * drawOnCanvas projects the result of running the inference onto the canvas.
+   * @param tensor output tensor from running the inference
+   */
+  const drawOnCanvas = async (tensor: Tensor) => {
     let i = 0
     const size = 128 * 128 * 4
     const arrayBuffer = new ArrayBuffer(size);
@@ -134,9 +141,10 @@ const SegmentationComponent = () => {
     let c = document.createElement("canvas")
     c.width = 128
     c.height = 128
+    const argMaxArray = outputArgMax(tensor)
     for (i = 0; i < size; i += 4) {
       idx = Math.floor(i / 4)
-      const color = pixelArgMax(output, idx)
+      const color = argMaxArray[idx]
       pixels[i] = color[0];
       pixels[i + 1] = color[1];
       pixels[i + 2] = color[2];
@@ -150,18 +158,22 @@ const SegmentationComponent = () => {
     destCtx!.drawImage(c, 0, 0, c.width, c.height, 0, 0, canvas!.width, canvas!.height);
   }
 
-  const pixelArgMax = (tensor: Tensor, idx: number): number[] => {
+  const outputArgMax = (tensor: Tensor): number[][] => {
     const classes = sessionInfo.meta.classes
-    let maxIdx = 0
-    let maxValue = -1000
-    const size = 16384
-    for (let i = 0; i < classes.length; i++) {
-      if (tensor.data[idx + i * size] > maxValue) {
-        maxValue = tensor.data[idx + i * size]
-        maxIdx = i
+    let result: number[][] = []
+    const size = 128 * 128
+    for (let idx = 0; idx < tensor.size; idx++) {
+      let maxIdx = 0
+      let maxValue = -1000
+      for (let i = 0; i < classes.length; i++) {
+        if (tensor.data[idx + i * size] > maxValue) {
+          maxValue = tensor.data[idx + i * size]
+          maxIdx = i
+        }
       }
+      result.push(classes[maxIdx].color)
     }
-    return classes[maxIdx].color
+    return result
   }
 
   return (
@@ -174,36 +186,58 @@ const SegmentationComponent = () => {
         <div className="col l6 m6 s12 center-align">
           <div className="row">
             <div className="col s12">
-              <h6 className="left-align">Select the data</h6>
-              <form action="#">
-                <div className="input-field">
-                  <input ref={fileURLRef} placeholder="Paste image link" type="text" className="validate" />
-                </div>
-                <div>OR</div>
-                <div className="file-field input-field">
-                  <div className="btn">
-                    <span>File</span>
-                    <input ref={fileSelectRef} type="file" />
+              <form action="#" onSubmit={(e) => e.preventDefault()}>
+                <h6 className="left-align">Set the data from URL</h6>
+                <div className="row">
+                  <div className="col l10 s12">
+                    <div className="input-field">
+                      <input ref={fileURLRef} placeholder="Paste image link" type="text" className="validate" />
+                    </div>
                   </div>
-                  <div className="file-path-wrapper">
-                    <input className="file-path validate" type="text" placeholder="Select a file" />
+                  <div className="col l2 s12">
+                    <div className="input-field">
+                      <button
+                        className="btn col s12 waves-effect waves-light"
+                        onClick={selectURLImage}
+                        style={{
+                          marginTop: "5px"
+                        }}>
+                        Set
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <h6 className="left-align">Set the data from local file</h6>
+                <div className="row">
+                  <div className="col l10 s12">
+                    <div className="file-field input-field">
+                      <div className="btn">
+                        <span>Select</span>
+                        <input ref={fileSelectRef} type="file" />
+                      </div>
+                      <div className="file-path-wrapper">
+                        <input className="file-path validate" type="text" placeholder="Select a file" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col l2 s12">
+                    <div className="input-field">
+                      <button
+                        className="btn col s12 waves-effect waves-light"
+                        onClick={selectFileImage}
+                        style={{
+                          marginTop: "5px"
+                        }}>
+                        Set
+                      </button>
+                    </div>
                   </div>
                 </div>
               </form>
               <div className="row">
-                <div className="col l6 m6 s12">
+                <div className="col l12 m12 s12">
                   <button
-                    className="btn col s12 waves-effect waves-light"
-                    onClick={selectImage}
-                    style={{
-                      marginTop: "5px"
-                    }}>
-                    Set
-                  </button>
-                </div>
-                <div className="col l6 m6 s12">
-                  <button
-                    className="btn col s12 waves-effect waves-light"
+                    className="btn col l6 m6 s12 waves-effect waves-light"
                     disabled={imageData.data === null || sessionInfo === null}
                     onClick={processImage}
                     style={{
