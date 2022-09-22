@@ -47,12 +47,18 @@ const SegmentationComponent = () => {
     setCanvasSize()
   }, []);
 
+  /**
+   * selectURLImage sets the image data from the URL text input field
+   */
   const selectURLImage = () => {
     if (fileURLRef.current && fileURLRef.current.value !== '') {
       loadImage(fileURLRef.current.value)
     }
   }
 
+  /**
+   * selectFileImage sets the image data from the file select field
+   */
   const selectFileImage = () => {
     if (fileSelectRef.current && fileSelectRef.current.files && fileSelectRef.current.files[0]) {
       var reader = new FileReader();
@@ -88,7 +94,7 @@ const SegmentationComponent = () => {
   const processImage = () => {
     const tensor = imageDataToTensor(imageData.data, [1, 3, 512, 512])
     if (sessionInfo.sessions.has("segment-model")) {
-      runInference(sessionInfo.sessions.get("segment-model"), tensor)
+      runInference(tensor)
     }
   }
 
@@ -116,7 +122,8 @@ const SegmentationComponent = () => {
     return inputTensor;
   }
 
-  const runInference = async (session: ort.InferenceSession, tensor: Tensor) => {
+  const runInference = async (tensor: Tensor) => {
+    const session = sessionInfo.sessions.get("segment-model")
     const start = new Date();
     const feeds: Record<string, ort.Tensor> = {};
     feeds[session.inputNames[0]] = tensor;
@@ -158,6 +165,12 @@ const SegmentationComponent = () => {
     destCtx!.drawImage(c, 0, 0, c.width, c.height, 0, 0, canvas!.width, canvas!.height);
   }
 
+  /**
+   * outputArgMax calculates argmax for every value in the resulting tensor and assigns
+   * the color value to it according to the color schema of the model.
+   * @param tensor 
+   * @returns 
+   */
   const outputArgMax = (tensor: Tensor): number[][] => {
     const classes = sessionInfo.meta.classes
     let result: number[][] = []
