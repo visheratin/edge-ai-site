@@ -13,6 +13,12 @@ const SEMSegmentation: NextPage = () => {
             <p>
               Info about the demo
             </p>
+            <h6>How to use</h6>
+            <ol>
+              <li>Select the model and load it.</li>
+              <li>Paste image URL, load the image from the device, or select one of example images.</li>
+              <li>Generate segments.</li>
+            </ol>
           </div>
         </div>
         <div className="row">
