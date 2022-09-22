@@ -5,6 +5,9 @@ interface ExampleImagesProps {
   setImageFunc: any
 }
 
+/**
+ * ExampleImages is a component for showing a gallery with sample images.
+ */
 const ExampleImages = (props: ExampleImagesProps) => {
   const setImage = (e: any) => {
     props.setImageFunc(e.target.src)

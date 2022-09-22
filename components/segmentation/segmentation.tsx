@@ -9,14 +9,27 @@ import ColorSchema from "./colorSchema";
 import ExampleImages from "./exampleImages";
 
 const SegmentationComponent = () => {
+  // create references for UI elements
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const canvasContainerRef = useRef<HTMLDivElement>(null)
   const fileSelectRef = useRef<HTMLInputElement>(null)
   const fileURLRef = useRef<HTMLInputElement>(null)
+
+  // create state store for canvas size properties
   const [dims, setCanvasDims] = useState({ width: 0, height: 0, aspectRatio: 1 })
+
+  // create session context that stores loaded inference sessions
   const [sessionInfo, _] = useSessionContext()
+
+  // Create state for the image data. We need to have such state because 
+  // the image data is set separately via URL, form file, or sample image.
+  // We set the state from these sources and use it in the processing method.
   const [imageData, setImageData] = useState({ data: null })
 
+  /**
+   * setCanvasSize sets the size of the canvas based on the screen size.
+   * @param aspectRatio ratio between height and widht of the image
+   */
   const setCanvasSize = (aspectRatio: number = 1) => {
     if (canvasRef.current && canvasContainerRef.current) {
       let canvasSize = canvasContainerRef.current.offsetWidth - 11
@@ -29,25 +42,37 @@ const SegmentationComponent = () => {
     }
   }
 
+  // set canvas size when the component is loaded
   useLayoutEffect(() => {
     setCanvasSize()
   }, []);
 
-  const process = () => {
+  /**
+   * setImage checks what source of image is set and loads the image data accordingly.
+   * The order is:
+   * 1. URL input field.
+   * 2. File selector.
+   */
+  const selectImage = () => {
     if (fileURLRef.current && fileURLRef.current.value !== '') {
       loadImage(fileURLRef.current.value)
     }
     else if (fileSelectRef.current && fileSelectRef.current.files && fileSelectRef.current.files[0]) {
       var reader = new FileReader();
-      reader.onload = async function () {
-        loadImage(this.result)
+      reader.onload = async () => {
+        loadImage(reader.result)
       }
       reader.readAsArrayBuffer(fileSelectRef.current.files[0])
     }
   }
 
+  /**
+   * loadImage reads the image data from the source, displays it on the canvas, 
+   * and sets the image data to the respective state.
+   * @param src can be either URL or array buffer
+   */
   const loadImage = async (src: any) => {
-    var imageData = await Jimp.read(src).then((imageBuffer: Jimp) => {
+    var imgData = await Jimp.read(src).then((imageBuffer: Jimp) => {
       setCanvasSize(imageBuffer.bitmap.height / imageBuffer.bitmap.width)
       const imageData = new ImageData(new Uint8ClampedArray(imageBuffer.bitmap.data), imageBuffer.bitmap.width, imageBuffer.bitmap.height);
       let c = document.createElement("canvas")
@@ -60,7 +85,7 @@ const SegmentationComponent = () => {
       destCtx!.drawImage(c, 0, 0, c.width, c.height, 0, 0, canvas!.width, canvas!.height);
       return imageBuffer.resize(512, 512);
     });
-    setImageData({ data: imageData })
+    setImageData({ data: imgData })
   }
 
   const processImage = () => {
@@ -169,7 +194,7 @@ const SegmentationComponent = () => {
                 <div className="col l6 m6 s12">
                   <button
                     className="btn col s12 waves-effect waves-light"
-                    onClick={process}
+                    onClick={selectImage}
                     style={{
                       marginTop: "5px"
                     }}>

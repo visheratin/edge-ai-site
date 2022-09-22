@@ -1,9 +1,15 @@
 import { ModelClass } from "../../data/modelMeta"
 
+/**
+ ColorSchemaProps stores the array of classes on which the segmentation model was trained.
+*/
 interface ColorSchemaProps {
   classes: ModelClass[]
 }
 
+/**
+ ColorSchema is a component for displaying the classes on which the segmentation model was trained.
+*/
 const ColorSchema = (props: ColorSchemaProps) => {
   return (
     <>
