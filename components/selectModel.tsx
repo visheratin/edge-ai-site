@@ -1,6 +1,3 @@
-/**
-  ModelSelect component
-*/
 import { useRef, useState } from "react"
 import { ModelMetadata } from "../data/modelMeta"
 import { useSessionContext } from "./sessionContext"
@@ -14,11 +11,21 @@ interface ModelSelectProps {
   models: ModelMetadata[]
 }
 
+/**
+ * ModelSelect component provides functionality of selecting the model from the list of 
+ * available models, create ORT sessions for every .onnx file of that model, and save 
+ * all sessions to the session context so the sessions could be used in other components.
+ */
 const ModelSelect = (props: ModelSelectProps) => {
-  const [loader, setLoader] = useState({ hidden: true })
-  const [_, setSessionInfo] = useSessionContext()
-  const modelSelectRef = useRef<HTMLSelectElement>(null)
+  const [loader, setLoader] = useState({ hidden: true }) // loader spinner state
+  const [_, setSessionInfo] = useSessionContext() // method for setting session context
+  const modelSelectRef = useRef<HTMLSelectElement>(null) // reference for the model selector element
 
+  /**
+   * createSession extracts the model file and creates an ORT session using it.
+   * @param modelPath URL for the model .onnx file
+   * @returns ORT session
+   */
   const createSession = async (modelPath: string): Promise<ort.InferenceSession> => {
     const model_data = await fetch(modelPath).then(resp => resp.arrayBuffer())
     const start = new Date();
@@ -38,6 +45,11 @@ const ModelSelect = (props: ModelSelectProps) => {
     return session
   }
 
+  /**
+   * loadModel gets the model metadata based on the selected model, creates ORT sessions
+   * for all model files, and sets the session context.
+   * @returns 
+   */
   const loadModel = async () => {
     const selectedIdx = modelSelectRef.current?.selectedIndex
     if (selectedIdx === 0) {
