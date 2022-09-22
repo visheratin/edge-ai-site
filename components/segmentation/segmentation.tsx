@@ -220,6 +220,7 @@ const SegmentationComponent = () => {
                     </div>
                   </div>
                 </div>
+                <div className="divider"></div>
                 <h6 className="left-align">Set the data from local file</h6>
                 <div className="row">
                   <div className="col l10 s12">
@@ -249,6 +250,7 @@ const SegmentationComponent = () => {
               </form>
               <div className="row">
                 <div className="col l12 m12 s12">
+                  <div className="divider"></div>
                   <button
                     className="btn col l6 m6 s12 waves-effect waves-light"
                     disabled={imageData.data === null || sessionInfo === null}
