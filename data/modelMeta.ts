@@ -1,11 +1,11 @@
-export interface modelClass {
+export interface ModelClass {
     name: string
     color: number[]
 }
 
 export interface ModelMetadata {
     title: string
-    modelPath: string
-    classes: modelClass[]
+    models: Map<string, string>
+    classes: ModelClass[]
     examples: string[]
 }

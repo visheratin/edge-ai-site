@@ -65,7 +65,9 @@ const SegmentationComponent = () => {
 
   const processImage = () => {
     const tensor = imageDataToTensor(imageData.data, [1, 3, 512, 512])
-    runInference(sessionInfo.session, tensor)
+    if (sessionInfo.sessions.has("segment-model")) {
+      runInference(sessionInfo.sessions.get("segment-model"), tensor)
+    }
   }
 
   const imageDataToTensor = (image: Jimp, dims: number[]): Tensor => {
@@ -92,9 +94,9 @@ const SegmentationComponent = () => {
     feeds[session.inputNames[0]] = tensor;
     const outputData = await session.run(feeds);
     const end = new Date();
-    const inferenceTime = (end.getTime() - start.getTime()) / 1000;
+    const elapsed = (end.getTime() - start.getTime()) / 1000;
     const output = outputData[session.outputNames[0]];
-    console.log(inferenceTime)
+    console.log(elapsed)
     outputToCanvas(output)
   }
 

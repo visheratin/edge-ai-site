@@ -3,7 +3,9 @@ import { ModelMetadata } from "./modelMeta";
 export const segmentationModels: ModelMetadata[] = [
     {
         title: "Small model",
-        modelPath: "/_next/static/chunks/pages/model_quant.onnx",
+        models: new Map<string, string>([
+            ["segment-model", "/_next/static/chunks/pages/model_quant.onnx"],
+        ]),
         classes: [
             {
                 name: "Background",
@@ -26,7 +28,9 @@ export const segmentationModels: ModelMetadata[] = [
     },
     {
         title: "Larger model",
-        modelPath: "/_next/static/chunks/pages/model_quant-1.onnx",
+        models: new Map<string, string>([
+            ["segment-model", "/_next/static/chunks/pages/model_quant-1.onnx"],
+        ]),
         classes: [
             {
                 name: "Background",

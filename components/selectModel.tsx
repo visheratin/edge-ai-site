@@ -19,13 +19,7 @@ const ModelSelect = (props: ModelSelectProps) => {
   const [_, setSessionInfo] = useSessionContext()
   const modelSelectRef = useRef<HTMLSelectElement>(null)
 
-  const loadModel = async () => {
-    const modelPath = modelSelectRef.current?.selectedOptions[0].value
-    const selectedIdx = modelSelectRef.current?.selectedIndex
-    if (modelPath === "") {
-      return
-    }
-    setLoader({ hidden: false })
+  const createSession = async (modelPath: string): Promise<ort.InferenceSession> => {
     const model_data = await fetch(modelPath).then(resp => resp.arrayBuffer())
     const start = new Date();
     const session = await ort.InferenceSession.create(
@@ -39,10 +33,24 @@ const ModelSelect = (props: ModelSelectProps) => {
       }
     );
     const end = new Date();
-    const inferenceTime = (end.getTime() - start.getTime()) / 1000;
-    console.log(`Inference session created in ${inferenceTime} seconds`)
+    const elapsed = (end.getTime() - start.getTime()) / 1000;
+    console.log(`Inference session created in ${elapsed} seconds.`)
+    return session
+  }
+
+  const loadModel = async () => {
+    const selectedIdx = modelSelectRef.current?.selectedIndex
+    if (selectedIdx === 0) {
+      return
+    }
+    setLoader({ hidden: false })
+    let sessions: Map<string, ort.InferenceSession> = new Map<string, ort.InferenceSession>()
+    for (const [name, path] of props.models[selectedIdx - 1].models) {
+      const session = await createSession(path)
+      sessions.set(name, session)
+    }
     const info: SessionInfo = {
-      session: session,
+      sessions: sessions,
       meta: props.models[selectedIdx - 1]
     }
     setSessionInfo(info)
@@ -57,7 +65,7 @@ const ModelSelect = (props: ModelSelectProps) => {
             <select ref={modelSelectRef} className="browser-default" id="modelSelect">
               <option value="" disabled selected>Select the model</option>
               {props.models.map((e, key) => {
-                return <option key={key} value={e.modelPath}>{e.title}</option>
+                return <option key={key}>{e.title}</option>
               })}
             </select>
           </div>

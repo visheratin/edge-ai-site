@@ -1,7 +1,7 @@
-import { modelClass } from "../../data/modelMeta"
+import { ModelClass } from "../../data/modelMeta"
 
 interface ColorSchemaProps {
-  classes: modelClass[]
+  classes: ModelClass[]
 }
 
 const ColorSchema = (props: ColorSchemaProps) => {
