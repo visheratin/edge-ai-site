@@ -1,3 +1,5 @@
+import { useLayoutEffect } from "react";
+
 export default function Navbar() {
   return (
     <>
@@ -6,13 +8,8 @@ export default function Navbar() {
           <a id="logo-container" href="/" className="brand-logo">Edge AI</a>
           <ul className="right hide-on-med-and-down">
             <li><a href="/models/sem-segment">Microscopy images segmentation</a></li>
+            <li><a href="/models/grammar-check">Grammar check</a></li>
           </ul>
-
-          <ul id="nav-mobile" className="sidenav">
-            <li><a href="/models/sem-segment">Microscopy images segmentation</a></li>
-          </ul>
-          <a href="#" data-target="nav-mobile" className="sidenav-trigger"
-          ><i className="material-icons">Menu</i></a>
         </div>
       </nav>
     </>

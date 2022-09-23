@@ -3,7 +3,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Tensor } from 'onnxruntime-web';
 import { useSessionContext } from "../sessionContext";
 import * as ort from 'onnxruntime-web';
-import { segmentationModels } from "../../data/segmentation";
+import { segmentationModels } from "../../data/segmentationModels";
 import SelectModel from "../selectModel";
 import ColorSchema from "./colorSchema";
 import ExampleImages from "./exampleImages";

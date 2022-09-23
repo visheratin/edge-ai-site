@@ -28,6 +28,20 @@ const Home: NextPage = () => {
             </div>
           </div>
         </div>
+        <div className="col l4 m6 s12">
+          <div className="card">
+            <div className="card-image">
+              <Image src={bowtiePic} />
+            </div>
+            <div className="card-content">
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque convallis ligula nec mi fringilla, in egestas lacus lobortis.
+                Donec non viverra diam. Proin convallis enim ac velit iaculis, non venenatis dui eleifend.</p>
+            </div>
+            <div className="card-action">
+              <a href="models/grammar-check">Open demo</a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
