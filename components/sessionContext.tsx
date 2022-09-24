@@ -7,13 +7,7 @@
 import { createContext, useContext, useState } from "react";
 import { SessionInfo } from "../data/sessionInfo";
 
-const defaultState: SessionInfo = {
-  meta: {
-    classes: []
-  }
-};
-
-const SessionContext = createContext<SessionInfo>(defaultState);
+const SessionContext = createContext<SessionInfo>(null);
 
 export function ORTSessionProvider({ children }) {
   const [session, setSession] = useState(null);

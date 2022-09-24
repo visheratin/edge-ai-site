@@ -1,6 +1,6 @@
-import { ModelMetadata } from "./modelMeta";
+import { Metadata } from "./metadata";
 
-export const segmentationModels: ModelMetadata[] = [
+export const segmentationModels: Metadata[] = [
     {
         title: "Small model (4 MB)",
         models: new Map<string, string>([
