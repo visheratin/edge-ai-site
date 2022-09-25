@@ -191,7 +191,7 @@ const SegmentationComponent = () => {
 
   return (
     <>
-      <SelectModel models={segmentationModels} />
+      <SelectModel models={segmentationModels} callback={() => { }} />
       <div className="row">
         <div ref={canvasContainerRef} className="col l6 m6 s12">
           <canvas className="grey lighten-5" ref={canvasRef} width={dims.width} height={dims.height} />

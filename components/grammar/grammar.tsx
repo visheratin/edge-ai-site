@@ -2,6 +2,10 @@ import { useRef, useState } from "react"
 import { grammarModels } from "./models"
 import SelectModel from "../selectModel"
 import Tokenizer from "./tokenizers"
+import T5ForConditionalGeneration from "./transformers"
+import { useSessionContext } from "../sessionContext"
+import { SessionInfo } from "../../data/sessionInfo"
+import { delay } from "lodash"
 
 const GrammarCheckComponent = () => {
   const [loader, setLoader] = useState({ loading: false })
@@ -9,10 +13,15 @@ const GrammarCheckComponent = () => {
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const [inputTimeout, setInputTimeout] = useState({ value: null })
 
-  const loadTokenizer = async (url: string) => {
-    const response = await fetch(url);
+  const [tokenizer, setTokenizer] = useState({ instance: null })
+  const [model, setModel] = useState({ instance: null })
+
+  const initModel = async (sessionInfo: SessionInfo) => {
+    const response = await fetch(sessionInfo.meta.tokenizer);
     const tokenizer = Tokenizer.fromConfig(await response.json());
-    console.log(tokenizer)
+    setTokenizer({ instance: tokenizer })
+    const model = new T5ForConditionalGeneration(sessionInfo.sessions.get("encoder"), sessionInfo.sessions.get("init-decoder"), sessionInfo.sessions.get("decoder"))
+    setModel({ instance: model })
   }
 
   const inputChanged = (e: Event) => {
@@ -24,17 +33,24 @@ const GrammarCheckComponent = () => {
     setInputTimeout({ value: timeout })
   }
 
-  const processInput = () => {
+  const processInput = async () => {
     const value = inputRef.current?.value
-    const prompt = `translate English to French: ${value}`
+    const prompt = `correct: ${value}`
     setLoader({ loading: true })
-    setOutput({ value: prompt })
+    const inputTokenIds = tokenizer.instance.encode(prompt)
+    const generationOptions = {
+      "maxLength": 5000,
+      "topK": 0,
+    };
+    const outputTokenIds = await model.instance.generate(inputTokenIds, generationOptions);
+    const output = tokenizer.instance.decode(outputTokenIds, true).trim();
+    setOutput({ value: output })
     setLoader({ loading: false })
   }
 
   return (
     <>
-      <SelectModel models={grammarModels} />
+      <SelectModel models={grammarModels} callback={initModel} />
       <div className="row">
         <div className="progress">
           <div className={loader.loading ? "indeterminate" : "determinate"}></div>

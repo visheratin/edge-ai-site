@@ -9,6 +9,7 @@ ort.env.wasm.simd = true
 
 interface ModelSelectProps {
   models: ModelMetadata[]
+  callback: Function
 }
 
 /**
@@ -61,11 +62,15 @@ const ModelSelect = (props: ModelSelectProps) => {
       const session = await createSession(path)
       sessions.set(name, session)
     }
+    const modelMeta = props.models[selectedIdx - 1]
     const info: SessionInfo = {
       sessions: sessions,
-      meta: props.models[selectedIdx - 1]
+      meta: modelMeta
     }
-    setSessionInfo(info)
+    await setSessionInfo(info)
+    if (props.callback !== null) {
+      await props.callback(info)
+    }
     setLoader({ hidden: true })
   }
 
