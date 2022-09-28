@@ -13,5 +13,18 @@ export const grammarModels: Metadata[] = [
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tempus, enim viverra auctor tempus.",
             "Morbi elit mi, accumsan vitae elementum tincidunt, feugiat sed risus."
         ]
+    },
+    {
+        title: "T5 Efficient TINY quantinized",
+        models: new Map<string, string>([
+            ["encoder", "/_next/static/chunks/pages/grammar/encoder-quant.onnx"],
+            ["decoder", "/_next/static/chunks/pages/grammar/decoder-quant.onnx"],
+            ["init-decoder", "/_next/static/chunks/pages/grammar/decoder-init-quant.onnx"],
+        ]),
+        tokenizer: "/_next/static/chunks/pages/grammar/tokenizer.json",
+        examples: [
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tempus, enim viverra auctor tempus.",
+            "Morbi elit mi, accumsan vitae elementum tincidunt, feugiat sed risus."
+        ]
     }
 ]

@@ -3,9 +3,7 @@ import { grammarModels } from "./models"
 import SelectModel from "../selectModel"
 import Tokenizer from "./tokenizers"
 import T5ForConditionalGeneration from "./transformers"
-import { useSessionContext } from "../sessionContext"
 import { SessionInfo } from "../../data/sessionInfo"
-import { delay } from "lodash"
 
 const GrammarCheckComponent = () => {
   const [loader, setLoader] = useState({ loading: false })
@@ -34,8 +32,12 @@ const GrammarCheckComponent = () => {
   }
 
   const processInput = async () => {
+    const start = new Date();
     const value = inputRef.current?.value
-    const prompt = `correct: ${value}`
+    if (value === "") {
+      return
+    }
+    const prompt = `${value}`
     setLoader({ loading: true })
     const inputTokenIds = tokenizer.instance.encode(prompt)
     const generationOptions = {
@@ -46,6 +48,9 @@ const GrammarCheckComponent = () => {
     const output = tokenizer.instance.decode(outputTokenIds, true).trim();
     setOutput({ value: output })
     setLoader({ loading: false })
+    const end = new Date();
+    const elapsed = (end.getTime() - start.getTime()) / 1000;
+    console.log(`Inference time: ${elapsed} seconds.`)
   }
 
   return (
