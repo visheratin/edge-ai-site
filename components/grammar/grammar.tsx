@@ -34,19 +34,28 @@ const GrammarCheckComponent = () => {
   const processInput = async () => {
     const start = new Date();
     const value = inputRef.current?.value
-    if (value === "") {
+    if (value === "" || value === undefined) {
       return
     }
-    const prompt = `${value}`
+    let sentences = value.match(/[^\.!\?]+[\.!\?]+/g)
+    if (sentences === null) {
+      sentences = [value]
+    }
     setLoader({ loading: true })
-    const inputTokenIds = tokenizer.instance.encode(prompt)
     const generationOptions = {
       "maxLength": 5000,
       "topK": 0,
-    };
-    const outputTokenIds = await model.instance.generate(inputTokenIds, generationOptions);
-    const output = tokenizer.instance.decode(outputTokenIds, true).trim();
-    setOutput({ value: output })
+    }
+    let result = ""
+    for (let sentence of sentences) {
+      sentence = sentence.trim()
+      const inputTokenIds = tokenizer.instance.encode(sentence)
+      const outputTokenIds = await model.instance.generate(inputTokenIds, generationOptions);
+      let output: string = tokenizer.instance.decode(outputTokenIds, true).trim();
+      output = output.trim()
+      result = result.concat(" ", output)
+    }
+    setOutput({ value: result })
     setLoader({ loading: false })
     const end = new Date();
     const elapsed = (end.getTime() - start.getTime()) / 1000;
