@@ -30,6 +30,8 @@ const SegmentationComponent = (props: SegmentationProps) => {
   // We set the state from these sources and use it in the processing method.
   const [imageData, setImageData] = useState({ data: null })
 
+  const [foundClassIdx, setFoundClassIdx] = useState({ indices: new Set<number>() })
+
   /**
    * setCanvasSize sets the size of the canvas based on the screen size.
    * @param aspectRatio ratio between height and widht of the image
@@ -176,20 +178,30 @@ const SegmentationComponent = (props: SegmentationProps) => {
    * @returns 
    */
   const outputArgMax = (tensor: Tensor): number[][] => {
-    const classes = sessionInfo.meta.classes
+    const modelClasses = sessionInfo.meta.classes
     let result: number[][] = []
     const size = 128 * 128
-    for (let idx = 0; idx < tensor.size; idx++) {
+    let classNumbers = new Set<number>()
+    for (let idx = 0; idx < size; idx++) {
       let maxIdx = 0
       let maxValue = -1000
-      for (let i = 0; i < classes.length; i++) {
+      for (let i = 0; i < modelClasses.length; i++) {
         if (tensor.data[idx + i * size] > maxValue) {
           maxValue = tensor.data[idx + i * size]
           maxIdx = i
         }
       }
-      result.push(classes[maxIdx].color)
+      classNumbers.add(maxIdx)
+      // let currentValue = classNumbers.get(maxIdx)
+      // if (!currentValue) {
+      //   currentValue = 1
+      // } else {
+      //   currentValue += 1
+      // }
+      // classNumbers.set(maxIdx, currentValue)
+      result.push(modelClasses[maxIdx].color)
     }
+    setFoundClassIdx({ indices: classNumbers })
     return result
   }
 
@@ -271,7 +283,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
           <div className="row">
             <div className="col s12">
               {
-                sessionInfo !== null && <ColorSchema classes={sessionInfo.meta.classes} />
+                sessionInfo !== null && <ColorSchema classes={sessionInfo.meta.classes} foundIndices={foundClassIdx.indices} />
               }
             </div>
           </div>

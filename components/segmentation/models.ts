@@ -15,6 +15,12 @@ const semSegmentationClasses: ModelClass[] = [
     }
 ]
 
+const semSegmentationExamples: string[] = [
+    "/sem-segment/image-1.png",
+    "/sem-segment/image-2.png",
+    "/sem-segment/image-3.png"
+]
+
 export const semSegmentationModels: Metadata[] = [
     {
         title: "Small model (4 MB)",
@@ -22,11 +28,7 @@ export const semSegmentationModels: Metadata[] = [
             ["segment-model", "/_next/static/chunks/pages/sem-segment/model-small.onnx"],
         ]),
         classes: semSegmentationClasses,
-        examples: [
-            "/sem-segment/image-1.png",
-            "/sem-segment/image-2.png",
-            "/sem-segment/image-3.png"
-        ]
+        examples: semSegmentationExamples
     },
     {
         title: "Larger model (14 MB)",
@@ -34,11 +36,7 @@ export const semSegmentationModels: Metadata[] = [
             ["segment-model", "/_next/static/chunks/pages/sem-segment/model-larger.onnx"],
         ]),
         classes: semSegmentationClasses,
-        examples: [
-            "/sem-segment/image-1.png",
-            "/sem-segment/image-2.png",
-            "/sem-segment/image-3.png"
-        ]
+        examples: semSegmentationExamples
     },
     {
         title: "Large model (85 MB)",
@@ -46,11 +44,7 @@ export const semSegmentationModels: Metadata[] = [
             ["segment-model", "/_next/static/chunks/pages/sem-segment/model-large.onnx"],
         ]),
         classes: semSegmentationClasses,
-        examples: [
-            "/sem-segment/image-1.png",
-            "/sem-segment/image-2.png",
-            "/sem-segment/image-3.png"
-        ]
+        examples: semSegmentationExamples
     }
 ]
 
@@ -207,6 +201,15 @@ const generalSegmentationClasses: ModelClass[] = [
     { name: "flag", color: [92, 0, 255, 150] }
 ]
 
+const generalSegmentationExamples: string[] = [
+    "/segment/image-1.jpg",
+    "/segment/image-2.jpg",
+    "/segment/image-3.jpg",
+    "/segment/image-4.jpg",
+    "/segment/image-5.jpg",
+    "/segment/image-6.jpg",
+]
+
 export const generalSegmentationModels: Metadata[] = [
     {
         title: "Small model (15 MB)",
@@ -214,11 +217,7 @@ export const generalSegmentationModels: Metadata[] = [
             ["segment-model", "/_next/static/chunks/pages/segment/model.onnx"],
         ]),
         classes: generalSegmentationClasses,
-        examples: [
-            "/sem-segment/image-1.png",
-            "/sem-segment/image-2.png",
-            "/sem-segment/image-3.png"
-        ]
+        examples: generalSegmentationExamples
     },
     {
         title: "Small model quantinized (4 MB)",
@@ -226,10 +225,6 @@ export const generalSegmentationModels: Metadata[] = [
             ["segment-model", "/_next/static/chunks/pages/segment/model-quant.onnx"],
         ]),
         classes: generalSegmentationClasses,
-        examples: [
-            "/sem-segment/image-1.png",
-            "/sem-segment/image-2.png",
-            "/sem-segment/image-3.png"
-        ]
+        examples: generalSegmentationExamples
     }
 ]

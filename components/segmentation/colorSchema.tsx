@@ -5,6 +5,7 @@ import { ModelClass } from "../../data/modelMeta"
 */
 interface ColorSchemaProps {
   classes: ModelClass[]
+  foundIndices: Set<number>
 }
 
 /**
@@ -23,7 +24,10 @@ const ColorSchema = (props: ColorSchemaProps) => {
         </thead>
         <tbody>
           {
-            props && props.classes.map((e, key) => {
+            props && props.classes.map((e, idx) => {
+              if (!props.foundIndices || !props.foundIndices.has(idx)) {
+                return
+              }
               const code = `rgba(${e.color[0]},${e.color[1]},${e.color[2]},${e.color[3] / 255.0})`
               return (
                 <tr>
