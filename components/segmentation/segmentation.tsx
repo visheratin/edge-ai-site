@@ -156,7 +156,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
     c.height = 128
     const argMaxArray = outputArgMax(tensor)
     for (i = 0; i < size; i += 4) {
-      idx = Math.floor(i / 4)
+      idx = Math.round(i / 4)
       const color = argMaxArray[idx]
       pixels[i] = color[0];
       pixels[i + 1] = color[1];
