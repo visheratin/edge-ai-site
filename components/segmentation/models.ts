@@ -23,25 +23,25 @@ const semSegmentationExamples: string[] = [
 
 export const semSegmentationModels: Metadata[] = [
     {
-        title: "Small model (4 MB)",
+        title: "Small model (SegFormer B0, 4 MB)",
         models: new Map<string, string>([
-            ["segment-model", "/_next/static/chunks/pages/sem-segment/model-small.onnx"],
+            ["segment-model", "/_next/static/chunks/pages/sem-segment/b0.onnx"],
         ]),
         classes: semSegmentationClasses,
         examples: semSegmentationExamples
     },
     {
-        title: "Larger model (14 MB)",
+        title: "Larger model (SegFormer B1, 14 MB)",
         models: new Map<string, string>([
-            ["segment-model", "/_next/static/chunks/pages/sem-segment/model-larger.onnx"],
+            ["segment-model", "/_next/static/chunks/pages/sem-segment/b1.onnx"],
         ]),
         classes: semSegmentationClasses,
         examples: semSegmentationExamples
     },
     {
-        title: "Large model (85 MB)",
+        title: "Large model (SegFormer B5, 85 MB)",
         models: new Map<string, string>([
-            ["segment-model", "/_next/static/chunks/pages/sem-segment/model-large.onnx"],
+            ["segment-model", "/_next/static/chunks/pages/sem-segment/b5.onnx"],
         ]),
         classes: semSegmentationClasses,
         examples: semSegmentationExamples
@@ -212,17 +212,25 @@ const generalSegmentationExamples: string[] = [
 
 export const generalSegmentationModels: Metadata[] = [
     {
-        title: "Small model (15 MB)",
+        title: "Small model (SegFormer B0, 4 MB)",
         models: new Map<string, string>([
-            ["segment-model", "/_next/static/chunks/pages/segment/model.onnx"],
+            ["segment-model", "/_next/static/chunks/pages/segment/b0.onnx"],
         ]),
         classes: generalSegmentationClasses,
         examples: generalSegmentationExamples
     },
     {
-        title: "Small model quantinized (4 MB)",
+        title: "Larger model (SegFormer B1, 14 MB)",
         models: new Map<string, string>([
-            ["segment-model", "/_next/static/chunks/pages/segment/model-quant.onnx"],
+            ["segment-model", "/_next/static/chunks/pages/segment/b1.onnx"],
+        ]),
+        classes: generalSegmentationClasses,
+        examples: generalSegmentationExamples
+    },
+    {
+        title: "Large model (SegFormer B4, 64 MB)",
+        models: new Map<string, string>([
+            ["segment-model", "/_next/static/chunks/pages/segment/b4.onnx"],
         ]),
         classes: generalSegmentationClasses,
         examples: generalSegmentationExamples
