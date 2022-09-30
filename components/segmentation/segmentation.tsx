@@ -1,14 +1,18 @@
 import Jimp from "jimp";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Tensor } from 'onnxruntime-web';
 import { useSessionContext } from "../sessionContext";
 import * as ort from 'onnxruntime-web';
-import { segmentationModels } from "./models";
 import SelectModel from "../selectModel";
 import ColorSchema from "./colorSchema";
 import ExampleImages from "./exampleImages";
+import { ModelMetadata } from "../../data/modelMeta";
 
-const SegmentationComponent = () => {
+interface SegmentationProps {
+  models: ModelMetadata[]
+}
+
+const SegmentationComponent = (props: SegmentationProps) => {
   // create references for UI elements
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const canvasContainerRef = useRef<HTMLDivElement>(null)
@@ -191,7 +195,7 @@ const SegmentationComponent = () => {
 
   return (
     <>
-      <SelectModel models={segmentationModels} callback={() => { }} />
+      <SelectModel models={props.models} callback={() => { }} />
       <div className="row">
         <div ref={canvasContainerRef} className="col l6 m6 s12">
           <canvas className="grey lighten-5" ref={canvasRef} width={dims.width} height={dims.height} />

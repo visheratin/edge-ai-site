@@ -1,5 +1,6 @@
 import type { NextPage } from 'next';
 import SegmentationComponent from '../../components/segmentation/segmentation'
+import { semSegmentationModels } from '../../components/segmentation/models';
 import { ORTSessionProvider } from '../../components/sessionContext'
 
 
@@ -22,7 +23,7 @@ const SEMSegmentation: NextPage = () => {
           </div>
         </div>
         <div className="row">
-          <SegmentationComponent />
+          <SegmentationComponent models={semSegmentationModels} />
         </div>
       </div>
     </ORTSessionProvider>
