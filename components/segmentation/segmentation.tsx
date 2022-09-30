@@ -192,13 +192,6 @@ const SegmentationComponent = (props: SegmentationProps) => {
         }
       }
       classNumbers.add(maxIdx)
-      // let currentValue = classNumbers.get(maxIdx)
-      // if (!currentValue) {
-      //   currentValue = 1
-      // } else {
-      //   currentValue += 1
-      // }
-      // classNumbers.set(maxIdx, currentValue)
       result.push(modelClasses[maxIdx].color)
     }
     setFoundClassIdx({ indices: classNumbers })
