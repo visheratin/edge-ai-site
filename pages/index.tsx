@@ -2,6 +2,7 @@ import type { NextPage } from "next"
 import Head from 'next/head'
 import Link from 'next/link'
 import Image from "next/image"
+import segmentPic from "../public/index/segment.png"
 import bowtiePic from "../public/index/bowtie.png"
 
 const Home: NextPage = () => {
@@ -31,7 +32,7 @@ const Home: NextPage = () => {
               <div className="card-image">
                 <Link href="models/segment">
                   <a>
-                    <Image src={bowtiePic} />
+                    <Image src={segmentPic} />
                   </a>
                 </Link>
               </div>
