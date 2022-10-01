@@ -29,7 +29,11 @@ module.exports = {
           {
             from: './node_modules/onnxruntime-web/dist/ort-wasm-threaded.wasm',
             to: 'static/chunks/pages/models',
-          }
+          },
+          {
+            from: './models',
+            to: 'static/chunks/pages',
+          },
         ],
       }),
     );
