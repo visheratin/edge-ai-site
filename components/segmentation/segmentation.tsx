@@ -15,12 +15,13 @@ interface SegmentationProps {
 const SegmentationComponent = (props: SegmentationProps) => {
   // create references for UI elements
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const imageRef = useRef<HTMLImageElement>(null)
   const canvasContainerRef = useRef<HTMLDivElement>(null)
   const fileSelectRef = useRef<HTMLInputElement>(null)
   const fileURLRef = useRef<HTMLInputElement>(null)
 
   // create state store for canvas size properties
-  const [dims, setCanvasDims] = useState({ width: 0, height: 0, aspectRatio: 1 })
+  const [displayDims, setDisplayDims] = useState({ width: 0, height: 0, aspectRatio: 1 })
 
   // create session context that stores loaded inference sessions
   const [sessionInfo, _] = useSessionContext()
@@ -32,6 +33,8 @@ const SegmentationComponent = (props: SegmentationProps) => {
 
   const [foundClassIdx, setFoundClassIdx] = useState({ indices: new Set<number>() })
 
+  const [className, setClassName] = useState({ value: "none" })
+
   /**
    * setCanvasSize sets the size of the canvas based on the screen size.
    * @param aspectRatio ratio between height and widht of the image
@@ -40,7 +43,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
     if (canvasRef.current && canvasContainerRef.current) {
       let canvasSize = canvasContainerRef.current.offsetWidth - 11
       canvasSize = canvasSize > 800 ? 800 : canvasSize
-      setCanvasDims({
+      setDisplayDims({
         width: canvasSize,
         height: canvasSize * aspectRatio,
         aspectRatio: aspectRatio
@@ -75,12 +78,39 @@ const SegmentationComponent = (props: SegmentationProps) => {
     }
   }
 
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas!.getContext('2d');
+    ctx!.clearRect(0, 0, canvas!.width, canvas!.height)
+  }
+
+  const getClass = (e) => {
+    const canvas = canvasRef.current;
+    var rect = canvas!.getBoundingClientRect();
+    const ctx = canvas!.getContext('2d');
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    var c = ctx!.getImageData(x, y, 1, 1).data;
+    let className = ""
+    let minDiff = Infinity
+    let diff = 0
+    for (let cls of sessionInfo.meta.classes) {
+      diff = Math.abs(cls.color[0] - c[0]) + Math.abs(cls.color[1] - c[1]) + Math.abs(cls.color[2] - c[2]) + Math.abs(cls.color[3] - c[3])
+      if (diff < minDiff) {
+        minDiff = diff
+        className = cls.name
+      }
+    }
+    setClassName({ value: className })
+  }
+
   /**
    * loadImage reads the image data from the source, displays it on the canvas, 
    * and sets the image data to the respective state.
    * @param src can be either URL or array buffer
    */
   const loadImage = async (src: any) => {
+    clearCanvas()
     var imgData = await Jimp.read(src).then((imageBuffer: Jimp) => {
       setCanvasSize(imageBuffer.bitmap.height / imageBuffer.bitmap.width)
       const imageData = new ImageData(new Uint8ClampedArray(imageBuffer.bitmap.data), imageBuffer.bitmap.width, imageBuffer.bitmap.height);
@@ -89,15 +119,14 @@ const SegmentationComponent = (props: SegmentationProps) => {
       c.height = imageBuffer.bitmap.height
       const ctx = c.getContext('2d');
       ctx!.putImageData(imageData, 0, 0);
-      const canvas = canvasRef.current;
-      var destCtx = canvas!.getContext('2d');
-      destCtx!.drawImage(c, 0, 0, c.width, c.height, 0, 0, canvas!.width, canvas!.height);
+      imageRef.current.src = c.toDataURL("image/png")
       return imageBuffer.resize(512, 512);
     });
     setImageData({ data: imgData })
   }
 
   const processImage = () => {
+    clearCanvas()
     const tensor = imageDataToTensor(imageData.data, [1, 3, 512, 512])
     if (sessionInfo.sessions.has("segment-model")) {
       runInference(tensor)
@@ -202,8 +231,18 @@ const SegmentationComponent = (props: SegmentationProps) => {
     <>
       <SelectModel models={props.models} callback={() => { }} />
       <div className="row">
-        <div ref={canvasContainerRef} className="col l6 m6 s12">
-          <canvas className="grey lighten-5" ref={canvasRef} width={dims.width} height={dims.height} />
+        <div ref={canvasContainerRef} className="col l6 m6 s12" >
+          <div style={{ position: "relative", height: displayDims.height }}>
+            <img ref={imageRef} width={displayDims.width} height={displayDims.height} style={{ position: "absolute", top: 0, left: 0 }} />
+            <canvas
+              ref={canvasRef}
+              width={displayDims.width}
+              height={displayDims.height}
+              style={{ position: "absolute", top: 0, left: 0 }}
+              onClick={getClass}
+              onTouchEnd={getClass} />
+          </div>
+          <div>Selected class: {className.value}</div>
         </div>
         <div className="col l6 m6 s12 center-align">
           <div className="row">
