@@ -25,7 +25,7 @@ export const semSegmentationModels: Metadata[] = [
     {
         title: "Small model (SegFormer B0, 4 MB)",
         models: new Map<string, string>([
-            ["segment-model", "/_next/static/chunks/pages/sem-segment/b0.onnx"],
+            ["segment-model", "https://edge-ai-models.s3.us-east-2.amazonaws.com/sem-segment/b0.onnx"],
         ]),
         classes: semSegmentationClasses,
         examples: semSegmentationExamples
@@ -33,7 +33,7 @@ export const semSegmentationModels: Metadata[] = [
     {
         title: "Larger model (SegFormer B1, 14 MB)",
         models: new Map<string, string>([
-            ["segment-model", "/_next/static/chunks/pages/sem-segment/b1.onnx"],
+            ["segment-model", "https://edge-ai-models.s3.us-east-2.amazonaws.com/sem-segment/b1.onnx"],
         ]),
         classes: semSegmentationClasses,
         examples: semSegmentationExamples
@@ -41,7 +41,7 @@ export const semSegmentationModels: Metadata[] = [
     {
         title: "Large model (SegFormer B5, 85 MB)",
         models: new Map<string, string>([
-            ["segment-model", "/_next/static/chunks/pages/sem-segment/b5.onnx"],
+            ["segment-model", "https://edge-ai-models.s3.us-east-2.amazonaws.com/sem-segment/b5.onnx"],
         ]),
         classes: semSegmentationClasses,
         examples: semSegmentationExamples
@@ -214,7 +214,7 @@ export const generalSegmentationModels: Metadata[] = [
     {
         title: "Small model (SegFormer B0, 4 MB)",
         models: new Map<string, string>([
-            ["segment-model", "/_next/static/chunks/pages/segment/b0.onnx"],
+            ["segment-model", "https://edge-ai-models.s3.us-east-2.amazonaws.com/segment/b0.onnx"],
         ]),
         classes: generalSegmentationClasses,
         examples: generalSegmentationExamples
@@ -222,7 +222,7 @@ export const generalSegmentationModels: Metadata[] = [
     {
         title: "Larger model (SegFormer B1, 14 MB)",
         models: new Map<string, string>([
-            ["segment-model", "/_next/static/chunks/pages/segment/b1.onnx"],
+            ["segment-model", "https://edge-ai-models.s3.us-east-2.amazonaws.com/segment/b1.onnx"],
         ]),
         classes: generalSegmentationClasses,
         examples: generalSegmentationExamples
@@ -230,7 +230,7 @@ export const generalSegmentationModels: Metadata[] = [
     {
         title: "Large model (SegFormer B4, 64 MB)",
         models: new Map<string, string>([
-            ["segment-model", "/_next/static/chunks/pages/segment/b4.onnx"],
+            ["segment-model", "https://edge-ai-models.s3.us-east-2.amazonaws.com/segment/b4.onnx"],
         ]),
         classes: generalSegmentationClasses,
         examples: generalSegmentationExamples
