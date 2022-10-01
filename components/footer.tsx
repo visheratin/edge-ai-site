@@ -9,7 +9,9 @@ export default function Footer() {
             <div className="col l9 s12">
               <h5 className="white-text">About the project</h5>
               <p className="grey-text text-lighten-4">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Et voluptatum laborum aliquid! Saepe dolore nostrum ullam explicabo consequuntur, deserunt ipsum. Temporibus id quas natus recusandae praesentium et est voluptatum blanditiis?
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Et voluptatum laborum aliquid!
+                Saepe dolore nostrum ullam explicabo consequuntur, deserunt ipsum. Temporibus id quas natus
+                recusandae praesentium et est voluptatum blanditiis?
               </p>
             </div>
             <div className="col l3 s12">

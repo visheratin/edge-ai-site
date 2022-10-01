@@ -5,6 +5,8 @@ import Tokenizer from "./tokenizers"
 import T5ForConditionalGeneration from "./transformers"
 import { SessionInfo } from "../../data/sessionInfo"
 
+const Diff = require("diff")
+
 const GrammarCheckComponent = () => {
   const [loader, setLoader] = useState({ loading: false })
   const [output, setOutput] = useState({ value: "Here will the output" })
@@ -55,7 +57,18 @@ const GrammarCheckComponent = () => {
       output = output.trim()
       result = result.concat(" ", output)
     }
-    setOutput({ value: result })
+    const diff = Diff.diffChars(value, result);
+    let output = ""
+    diff.forEach((part) => {
+      if (part.added) {
+        output += `<span style="color: green; font-weight: bold">${part.value}</span>`
+      } else if (part.removed) {
+        output += `<span style="color: red; font-weight: bold">${part.value}</span>`
+      } else {
+        output += `${part.value}`
+      }
+    })
+    setOutput({ value: output })
     setLoader({ loading: false })
     const end = new Date();
     const elapsed = (end.getTime() - start.getTime()) / 1000;
@@ -75,7 +88,7 @@ const GrammarCheckComponent = () => {
         </div>
         <div className="col l6 s12">
           <h6>Output</h6>
-          <div className="col l12 s12 grey lighten-4" style={{ minHeight: "50px" }}>{output.value}</div>
+          <div className="col l12 s12 grey lighten-4" style={{ minHeight: "50px" }} dangerouslySetInnerHTML={{ __html: output.value }}></div>
         </div>
       </div>
     </>
