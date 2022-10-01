@@ -28,19 +28,6 @@ export const grammarModels: Metadata[] = [
         ]
     },
     {
-        title: "T5 Efficient MINI",
-        models: new Map<string, string>([
-            ["encoder", "/_next/static/chunks/pages/grammar/mini-encoder.onnx"],
-            ["decoder", "/_next/static/chunks/pages/grammar/mini-decoder.onnx"],
-            ["init-decoder", "/_next/static/chunks/pages/grammar/mini-decoder-init.onnx"],
-        ]),
-        tokenizer: "/_next/static/chunks/pages/grammar/tokenizer.json",
-        examples: [
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tempus, enim viverra auctor tempus.",
-            "Morbi elit mi, accumsan vitae elementum tincidunt, feugiat sed risus."
-        ]
-    },
-    {
         title: "T5 Efficient MINI quantinized",
         models: new Map<string, string>([
             ["encoder", "/_next/static/chunks/pages/grammar/mini-encoder-quant.onnx"],
