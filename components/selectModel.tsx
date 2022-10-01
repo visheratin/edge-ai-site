@@ -7,6 +7,7 @@ import { SessionInfo } from "../data/sessionInfo"
 ort.env.wasm.numThreads = 3
 ort.env.wasm.simd = true
 
+
 interface ModelSelectProps {
   models: ModelMetadata[]
   callback: Function
