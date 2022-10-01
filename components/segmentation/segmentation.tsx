@@ -231,8 +231,8 @@ const SegmentationComponent = (props: SegmentationProps) => {
     <>
       <SelectModel models={props.models} callback={() => { }} />
       <div className="row">
-        <div ref={canvasContainerRef} className="col l6 m6 s12" >
-          <div style={{ position: "relative", height: displayDims.height }}>
+        <div className="col l6 m6 s12" >
+          <div ref={canvasContainerRef} style={{ position: "relative", height: displayDims.height }}>
             <img ref={imageRef} width={displayDims.width} height={displayDims.height} style={{ position: "absolute", top: 0, left: 0 }} />
             <canvas
               ref={canvasRef}
@@ -242,90 +242,84 @@ const SegmentationComponent = (props: SegmentationProps) => {
               onClick={getClass}
               onTouchEnd={getClass} />
           </div>
-          <div>Selected class: {className.value}</div>
+          <h6 className="center-align">Selected class: {className.value}</h6>
         </div>
         <div className="col l6 m6 s12 center-align">
-          <div className="row">
-            <div className="col s12">
-              <form action="#" onSubmit={(e) => e.preventDefault()}>
-                <h6 className="left-align">Set the data from URL</h6>
-                <div className="row">
-                  <div className="col l10 s12">
-                    <div className="input-field">
-                      <input ref={fileURLRef} placeholder="Paste image link" type="text" className="validate" />
-                    </div>
-                  </div>
-                  <div className="col l2 s12">
-                    <div className="input-field">
-                      <button
-                        className="btn col s12 waves-effect waves-light"
-                        onClick={selectURLImage}
-                        style={{
-                          marginTop: "5px"
-                        }}>
-                        Set
-                      </button>
-                    </div>
-                  </div>
+          <form action="#" onSubmit={(e) => e.preventDefault()}>
+            <h6 className="left-align">Set the data from URL</h6>
+            <div className="row">
+              <div className="col l10 s12">
+                <div className="input-field">
+                  <input ref={fileURLRef} placeholder="Paste image link" type="text" className="validate" />
                 </div>
-                <div className="divider"></div>
-                <h6 className="left-align">Set the data from local file</h6>
-                <div className="row">
-                  <div className="col l10 s12">
-                    <div className="file-field input-field">
-                      <div className="btn">
-                        <span>Select</span>
-                        <input ref={fileSelectRef} type="file" />
-                      </div>
-                      <div className="file-path-wrapper">
-                        <input className="file-path validate" type="text" placeholder="Select or drop a file" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col l2 s12">
-                    <div className="input-field">
-                      <button
-                        className="btn col s12 waves-effect waves-light"
-                        onClick={selectFileImage}
-                        style={{
-                          marginTop: "5px"
-                        }}>
-                        Set
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </form>
-              <div className="row">
-                <div className="col l12 m12 s12">
-                  <div className="divider"></div>
+              </div>
+              <div className="col l2 s12">
+                <div className="input-field">
                   <button
-                    className="btn col l6 m6 s12 waves-effect waves-light"
-                    disabled={imageData.data === null || sessionInfo === null}
-                    onClick={processImage}
+                    className="btn col s12 waves-effect waves-light"
+                    onClick={selectURLImage}
                     style={{
-                      marginTop: "10px"
+                      marginTop: "5px"
                     }}>
-                    Generate segments
+                    Set
                   </button>
                 </div>
               </div>
             </div>
-          </div>
+            <div className="divider"></div>
+            <h6 className="left-align">Set the data from local file</h6>
+            <div className="row">
+              <div className="col l10 s12">
+                <div className="file-field input-field">
+                  <div className="btn">
+                    <span>Select</span>
+                    <input ref={fileSelectRef} type="file" />
+                  </div>
+                  <div className="file-path-wrapper">
+                    <input className="file-path validate" type="text" placeholder="Select or drop a file" />
+                  </div>
+                </div>
+              </div>
+              <div className="col l2 s12">
+                <div className="input-field">
+                  <button
+                    className="btn col s12 waves-effect waves-light"
+                    onClick={selectFileImage}
+                    style={{
+                      marginTop: "5px"
+                    }}>
+                    Set
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
           <div className="row">
-            <div className="col s12">
-              {
-                sessionInfo !== null && <ColorSchema classes={sessionInfo.meta.classes} foundIndices={foundClassIdx.indices} />
-              }
+            <div className="col l12 m12 s12">
+              <div className="divider"></div>
+              <button
+                className="btn col l6 m6 s12 waves-effect waves-light"
+                disabled={imageData.data === null || sessionInfo === null}
+                onClick={processImage}
+                style={{
+                  marginTop: "10px"
+                }}>
+                Generate segments
+              </button>
             </div>
           </div>
-          <div className="row">
-            <div className="col s12">
-              {
-                sessionInfo !== null && <ExampleImages imageURLs={sessionInfo.meta.examples} setImageFunc={loadImage} />
-              }
-            </div>
-          </div>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col l6 m6 s12">
+          {
+            sessionInfo !== null && <ColorSchema classes={sessionInfo.meta.classes} foundIndices={foundClassIdx.indices} />
+          }
+        </div>
+        <div className="col l6 m6 s12">
+          {
+            sessionInfo !== null && <ExampleImages imageURLs={sessionInfo.meta.examples} setImageFunc={loadImage} />
+          }
         </div>
       </div>
     </>
