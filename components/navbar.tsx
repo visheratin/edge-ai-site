@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useLayoutEffect } from "react";
 
 export default function Navbar() {
   return (
