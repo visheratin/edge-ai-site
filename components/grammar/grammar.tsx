@@ -11,7 +11,7 @@ const Diff = require("diff")
 
 const GrammarCheckComponent = () => {
   const [loader, setLoader] = useState({ loading: false })
-  const [output, setOutput] = useState({ value: "" })
+  const [output, setOutput] = useState({ value: "Here will be the output" })
   const [diff, setDiff] = useState({ value: "" })
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const [inputTimeout, setInputTimeout] = useState({ value: null })
@@ -30,7 +30,7 @@ const GrammarCheckComponent = () => {
     setModel({ instance: model })
   }
 
-  const inputChanged = (e: Event) => {
+  const inputChanged = async (e: Event) => {
     e.preventDefault()
     if (inputTimeout.value) {
       clearTimeout(inputTimeout.value)
@@ -105,7 +105,7 @@ const GrammarCheckComponent = () => {
         </div>
         <div className="col l12 s12">
           <h6>Output</h6>
-          <textarea className="materialize-textarea" placeholder="Here will be the output" value={output.value}></textarea>
+          <div className="col l12 s12 grey lighten-5" style={{ minHeight: "50px" }} dangerouslySetInnerHTML={{ __html: output.value }}></div>
         </div>
         <div className="col l12 s12">
           <h6>Difference</h6>

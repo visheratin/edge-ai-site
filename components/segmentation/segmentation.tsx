@@ -126,7 +126,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
     setImageData({ data: imgData })
   }
 
-  const processImage = () => {
+  const processImage = async () => {
     clearCanvas()
     const tensor = imageDataToTensor(imageData.data, [1, 3, 512, 512])
     if (sessionInfo.sessions.has("segment-model")) {
