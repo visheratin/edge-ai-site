@@ -18,7 +18,10 @@ const semSegmentationClasses: ModelClass[] = [
 const semSegmentationExamples: string[] = [
     "/sem-segment/image-1.png",
     "/sem-segment/image-2.png",
-    "/sem-segment/image-3.png"
+    "/sem-segment/image-3.png",
+    "/sem-segment/image-4.png",
+    "/sem-segment/image-5.png",
+    "/sem-segment/image-6.png",
 ]
 
 export const semSegmentationModels: Metadata[] = [

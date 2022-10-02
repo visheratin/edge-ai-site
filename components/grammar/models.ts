@@ -9,10 +9,7 @@ export const grammarModels: Metadata[] = [
             ["init-decoder", "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/decoder-init.onnx"],
         ]),
         tokenizer: "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/tokenizer.json",
-        examples: [
-            "Grammar chchcking in browser! Hhow coool is that! Wha doo you think?",
-            "Morbi elit mi, accumsan vitae elementum tincidunt, feugiat sed risus."
-        ]
+        examples: []
     },
     {
         title: "T5 Efficient TINY quantinized",
@@ -22,10 +19,7 @@ export const grammarModels: Metadata[] = [
             ["init-decoder", "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/decoder-init-quant.onnx"],
         ]),
         tokenizer: "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/tokenizer.json",
-        examples: [
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tempus, enim viverra auctor tempus.",
-            "Morbi elit mi, accumsan vitae elementum tincidunt, feugiat sed risus."
-        ]
+        examples: []
     },
     {
         title: "T5 Efficient MINI quantinized",
@@ -35,9 +29,6 @@ export const grammarModels: Metadata[] = [
             ["init-decoder", "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/mini-decoder-init-quant.onnx"],
         ]),
         tokenizer: "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/tokenizer.json",
-        examples: [
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tempus, enim viverra auctor tempus.",
-            "Morbi elit mi, accumsan vitae elementum tincidunt, feugiat sed risus."
-        ]
+        examples: []
     }
 ]
