@@ -4,6 +4,7 @@ import SelectModel from "../selectModel"
 import Tokenizer from "./tokenizers"
 import T5ForConditionalGeneration from "./transformers"
 import { SessionInfo } from "../../data/sessionInfo"
+import { datadogLogs } from "@datadog/browser-logs"
 
 const Diff = require("diff")
 
@@ -34,7 +35,6 @@ const GrammarCheckComponent = () => {
   }
 
   const processInput = async () => {
-    const start = new Date();
     const value = inputRef.current?.value
     if (value === "" || value === undefined) {
       return
@@ -49,6 +49,7 @@ const GrammarCheckComponent = () => {
       "topK": 0,
     }
     let result = ""
+    const start = new Date();
     for (let sentence of sentences) {
       sentence = sentence.trim()
       const inputTokenIds = tokenizer.instance.encode(sentence)
@@ -57,6 +58,14 @@ const GrammarCheckComponent = () => {
       output = output.trim()
       result = result.concat(" ", output)
     }
+    const end = new Date();
+    const elapsed = (end.getTime() - start.getTime()) / 1000;
+    datadogLogs.logger.info('Inference finished.', {
+      input_length: value.length,
+      sentences_number: sentences.length,
+      elapsed_seconds: elapsed,
+    })
+    console.log(`Inference time: ${elapsed} seconds.`)
     const diff = Diff.diffChars(value, result);
     let output = ""
     diff.forEach((part) => {
@@ -70,9 +79,6 @@ const GrammarCheckComponent = () => {
     })
     setOutput({ value: output })
     setLoader({ loading: false })
-    const end = new Date();
-    const elapsed = (end.getTime() - start.getTime()) / 1000;
-    console.log(`Inference time: ${elapsed} seconds.`)
   }
 
   return (

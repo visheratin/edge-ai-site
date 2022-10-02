@@ -7,6 +7,7 @@ import SelectModel from "../selectModel";
 import ColorSchema from "./colorSchema";
 import ExampleImages from "./exampleImages";
 import { ModelMetadata } from "../../data/modelMeta";
+import { datadogLogs } from "@datadog/browser-logs";
 
 interface SegmentationProps {
   models: ModelMetadata[]
@@ -166,6 +167,9 @@ const SegmentationComponent = (props: SegmentationProps) => {
     const end = new Date();
     const elapsed = (end.getTime() - start.getTime()) / 1000;
     const output = outputData[session.outputNames[0]];
+    datadogLogs.logger.info('Inference finished.', {
+      elapsed_seconds: elapsed,
+    })
     console.log(`Inference time: ${elapsed} seconds.`)
     drawOnCanvas(output)
   }

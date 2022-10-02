@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@datadog/browser-logs": "^4.20.0",
     "diff": "^5.1.0",
     "fs": "^0.0.1-security",
     "jimp": "^0.16.1",

@@ -3,6 +3,7 @@ import { ModelMetadata } from "../data/modelMeta"
 import { useSessionContext } from "./sessionContext"
 import * as ort from 'onnxruntime-web';
 import { SessionInfo } from "../data/sessionInfo"
+import { datadogLogs } from "@datadog/browser-logs"
 
 ort.env.wasm.numThreads = 3
 ort.env.wasm.simd = true
@@ -42,6 +43,11 @@ const ModelSelect = (props: ModelSelectProps) => {
     );
     const end = new Date();
     const elapsed = (end.getTime() - start.getTime()) / 1000;
+    datadogLogs.logger.info('Inference session was created.', {
+      modelPath: modelPath,
+      model_size: model_data.byteLength,
+      elapsed_seconds: elapsed,
+    })
     console.log(`Session creation time: ${elapsed} seconds.`)
     return session
   }
