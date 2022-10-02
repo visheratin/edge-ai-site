@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from "next/image"
 import segmentPic from "../public/index/segment.png"
 import bowtiePic from "../public/index/bowtie.png"
+import grammarPic from "../public/index/grammar.png"
 
 const Home: NextPage = () => {
   return (
@@ -72,7 +73,7 @@ const Home: NextPage = () => {
           <div className="col l4 m6 s12">
             <div className="card">
               <div className="card-image">
-                <Image src={bowtiePic} />
+                <Image src={grammarPic} />
               </div>
               <div className="card-content">
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque convallis ligula nec mi fringilla, in egestas lacus lobortis.
