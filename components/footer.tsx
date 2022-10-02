@@ -15,13 +15,11 @@ export default function Footer() {
               </p>
             </div>
             <div className="col l3 s12">
-              <h5 className="white-text">Team members</h5>
+              <h5 className="white-text">Contacts</h5>
               <ul>
-                <li><a className="white-text" href="#!">Link 1</a></li>
-                <li><a className="white-text" href="#!">Link 2</a></li>
-                <li><a className="white-text" href="#!">Link 3</a></li>
-                <li><a className="white-text" href="#!">Link 4</a></li>
-                <li><a className="white-text" href="#!">Link 5</a></li>
+                <li><a className="white-text" href="https://twitter.com/visheratin">Twitter</a></li>
+                <li><a className="white-text" href="https://www.linkedin.com/in/visheratin/">LinkedIn</a></li>
+                <li><a className="white-text" href="mailto:alex@visheratin.com">Email</a></li>
               </ul>
             </div>
           </div>

@@ -39,8 +39,6 @@ const Home: NextPage = () => {
               </div>
               <div className="card-content">
                 <h6>Semantic images segmentation</h6>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque convallis ligula nec mi fringilla, in egestas lacus lobortis.
-                  Donec non viverra diam. Proin convallis enim ac velit iaculis, non venenatis dui eleifend.</p>
               </div>
               <div className="card-action">
                 <Link href="models/segment">
@@ -60,8 +58,6 @@ const Home: NextPage = () => {
               </div>
               <div className="card-content">
                 <h6>Microscope images segmentation</h6>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque convallis ligula nec mi fringilla, in egestas lacus lobortis.
-                  Donec non viverra diam. Proin convallis enim ac velit iaculis, non venenatis dui eleifend.</p>
               </div>
               <div className="card-action">
                 <Link href="models/sem-segment">
@@ -76,8 +72,7 @@ const Home: NextPage = () => {
                 <Image src={grammarPic} />
               </div>
               <div className="card-content">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque convallis ligula nec mi fringilla, in egestas lacus lobortis.
-                  Donec non viverra diam. Proin convallis enim ac velit iaculis, non venenatis dui eleifend.</p>
+                <h6>Grammar correction</h6>
               </div>
               <div className="card-action">
                 <a href="models/grammar-check">Open demo</a>
