@@ -15,7 +15,7 @@ const Home: NextPage = () => {
       </Head>
       <div className="container">
         <div className="row">
-          <h1 className="header">Modern models, *actually* in your browser</h1>
+          <h2 className="header">Modern models, directly in your browser</h2>
           <div className="col s12">
             <p>
               Info about the project

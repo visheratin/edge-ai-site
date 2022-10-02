@@ -14,7 +14,7 @@ const SEMSegmentation: NextPage = () => {
       </Head>
       <div className="container">
         <div className="row">
-          <h1 className="header">Semantic images segmentation</h1>
+          <h2 className="header">Semantic images segmentation</h2>
           <div className="col s12">
             <p>
               Info about the demo

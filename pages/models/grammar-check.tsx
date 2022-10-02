@@ -13,7 +13,7 @@ const GrammarCheck: NextPage = () => {
       </Head>
       <div className="container">
         <div className="row">
-          <h1 className="header">Standalone grammar correction</h1>
+          <h2 className="header">Standalone grammar correction</h2>
           <div className="col s12">
             <p>
               Info about the demo
