@@ -16,7 +16,6 @@ const ColorSchema = (props: ColorSchemaProps) => {
     <>
       {props && props.classes && props.foundIndices.size > 0 && (
         <>
-          <h6 className="left-align">Color schema</h6>
           <table className="centered">
             <thead>
               <tr>

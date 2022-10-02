@@ -72,7 +72,7 @@ const Home: NextPage = () => {
                 <Image src={grammarPic} />
               </div>
               <div className="card-content">
-                <h6>Grammar correction</h6>
+                <h6>In-browser grammar correction</h6>
               </div>
               <div className="card-action">
                 <a href="models/grammar-check">Open demo</a>

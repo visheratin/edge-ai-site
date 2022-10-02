@@ -2,11 +2,16 @@ import type { NextPage } from 'next';
 import SegmentationComponent from '../../components/segmentation/segmentation'
 import { semSegmentationModels } from '../../components/segmentation/models';
 import { ORTSessionProvider } from '../../components/sessionContext'
+import Head from 'next/head';
 
 
 const SEMSegmentation: NextPage = () => {
   return (
     <ORTSessionProvider>
+      <Head>
+        <title>Microscopy images segmentation - Edge AI</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       <div className="container">
         <div className="row">
           <h1 className="header">Microscopy images segmentation</h1>
