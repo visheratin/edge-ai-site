@@ -34,4 +34,4 @@ yarn-error.log*
 /.eslintrc.json
 /*.d.ts
 
-
+.vscode
