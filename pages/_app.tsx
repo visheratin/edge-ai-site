@@ -6,15 +6,13 @@ import Head from 'next/head'
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
-    if (typeof window.DD_LOGS === "undefined") {
-      window.DD_LOGS.init({
-        clientToken: 'pub1df46ecb733718bfa44a66ec0e6a5723',
-        site: 'datadoghq.com',
-        forwardErrorsToLogs: true,
-        sampleRate: 100,
-      })
-      console.log("Initialized Datadog")
-    }
+    window.DD_LOGS.init({
+      clientToken: 'pub1df46ecb733718bfa44a66ec0e6a5723',
+      site: 'datadoghq.com',
+      forwardErrorsToLogs: true,
+      sampleRate: 100,
+    })
+    console.log("Initialized Datadog")
   })
 
   return (
