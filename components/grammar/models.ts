@@ -30,7 +30,7 @@ export const grammarModels: Metadata[] = [
         ]),
         tokenizer: "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/tokenizer.json",
         examples: []
-    }
+    },
     {
         title: "T5 Efficient MINI quantinized",
         models: new Map<string, string>([
