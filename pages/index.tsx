@@ -69,13 +69,19 @@ const Home: NextPage = () => {
           <div className="col l4 m6 s12">
             <div className="card">
               <div className="card-image">
-                <Image src={grammarPic} />
+                <Link href="models/grammar-check">
+                  <a>
+                    <Image src={grammarPic} />
+                  </a>
+                </Link>
               </div>
               <div className="card-content">
-                <h6>In-browser grammar correction</h6>
+                <h6>Standalone grammar correction</h6>
               </div>
               <div className="card-action">
-                <a href="models/grammar-check">Open demo</a>
+                <Link href="models/grammar-check">
+                  <a>Open demo</a>
+                </Link>
               </div>
             </div>
           </div>

@@ -5,17 +5,22 @@ import Tokenizer from "./tokenizers"
 import T5ForConditionalGeneration from "./transformers"
 import { SessionInfo } from "../../data/sessionInfo"
 import { datadogLogs } from "@datadog/browser-logs"
+import { useSessionContext } from "../sessionContext"
 
 const Diff = require("diff")
 
 const GrammarCheckComponent = () => {
   const [loader, setLoader] = useState({ loading: false })
-  const [output, setOutput] = useState({ value: "Here will the output" })
+  const [output, setOutput] = useState({ value: "" })
+  const [diff, setDiff] = useState({ value: "" })
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const [inputTimeout, setInputTimeout] = useState({ value: null })
 
   const [tokenizer, setTokenizer] = useState({ instance: null })
   const [model, setModel] = useState({ instance: null })
+
+  // create session context that stores loaded inference sessions
+  const [sessionInfo, _] = useSessionContext()
 
   const initModel = async (sessionInfo: SessionInfo) => {
     const response = await fetch(sessionInfo.meta.tokenizer);
@@ -66,18 +71,19 @@ const GrammarCheckComponent = () => {
       elapsed_seconds: elapsed,
     })
     console.log(`Inference time: ${elapsed} seconds.`)
+    setOutput({ value: result })
     const diff = Diff.diffChars(value, result);
-    let output = ""
+    let diffValue = ""
     diff.forEach((part) => {
       if (part.added) {
-        output += `<span style="color: green; font-weight: bold">${part.value}</span>`
+        diffValue += `<span style="color: green; font-weight: bold">${part.value}</span>`
       } else if (part.removed) {
-        output += `<span style="color: red; font-weight: bold">${part.value}</span>`
+        diffValue += `<span style="color: red; font-weight: bold">${part.value}</span>`
       } else {
-        output += `${part.value}`
+        diffValue += `${part.value}`
       }
     })
-    setOutput({ value: output })
+    setDiff({ value: diffValue })
     setLoader({ loading: false })
   }
 
@@ -88,13 +94,22 @@ const GrammarCheckComponent = () => {
         <div className="progress">
           <div className={loader.loading ? "indeterminate" : "determinate"}></div>
         </div>
-        <div className="col l6 s12">
+        <div className="col l12 s12">
           <h6>Input</h6>
-          <textarea ref={inputRef} className="materialize-textarea" rows={5} onChange={inputChanged}></textarea>
+          <textarea
+            ref={inputRef}
+            className="materialize-textarea"
+            onChange={inputChanged}
+            disabled={!sessionInfo || !sessionInfo.sessions}
+            placeholder="Start typing here"></textarea>
         </div>
-        <div className="col l6 s12">
+        <div className="col l12 s12">
           <h6>Output</h6>
-          <div className="col l12 s12 grey lighten-4" style={{ minHeight: "50px" }} dangerouslySetInnerHTML={{ __html: output.value }}></div>
+          <textarea className="materialize-textarea" placeholder="Here will be the output" value={output.value}></textarea>
+        </div>
+        <div className="col l12 s12">
+          <h6>Difference</h6>
+          <div className="col l12 s12 grey lighten-5" style={{ minHeight: "50px" }} dangerouslySetInnerHTML={{ __html: diff.value }}></div>
         </div>
       </div>
     </>
