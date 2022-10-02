@@ -247,10 +247,16 @@ const SegmentationComponent = (props: SegmentationProps) => {
               onTouchEnd={getClass} />
           </div>
           <h6 className="center-align">Selected class: {className.value}</h6>
+          <div className="divider"></div>
+          <div>
+            {
+              sessionInfo !== null && <ColorSchema classes={sessionInfo.meta.classes} foundIndices={foundClassIdx.indices} />
+            }
+          </div>
         </div>
-        <div className="col l6 m6 s12 center-align">
+        <div className="col l6 m6 s12">
           <form action="#" onSubmit={(e) => e.preventDefault()}>
-            <h6 className="left-align">Set the data from URL</h6>
+            <h6>Set the data from URL</h6>
             <div className="row">
               <div className="col l10 s12">
                 <div className="input-field">
@@ -271,7 +277,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
               </div>
             </div>
             <div className="divider"></div>
-            <h6 className="left-align">Set the data from local file</h6>
+            <h6>Set the data from local file</h6>
             <div className="row">
               <div className="col l10 s12">
                 <div className="file-field input-field">
@@ -312,18 +318,12 @@ const SegmentationComponent = (props: SegmentationProps) => {
               </button>
             </div>
           </div>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col l6 m6 s12">
-          {
-            sessionInfo !== null && <ColorSchema classes={sessionInfo.meta.classes} foundIndices={foundClassIdx.indices} />
-          }
-        </div>
-        <div className="col l6 m6 s12">
-          {
-            sessionInfo !== null && <ExampleImages imageURLs={sessionInfo.meta.examples} setImageFunc={loadImage} />
-          }
+          <div className="divider"></div>
+          <div className="col l12 m12 s12">
+            {
+              sessionInfo !== null && <ExampleImages imageURLs={sessionInfo.meta.examples} setImageFunc={loadImage} />
+            }
+          </div>
         </div>
       </div>
     </>
