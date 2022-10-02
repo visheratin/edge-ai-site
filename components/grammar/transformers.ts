@@ -22,7 +22,6 @@ class T5ForConditionalGeneration {
         const startOfDecoderTokenId = 0;
         const endOfDecoderTokenId = 1;
         let encoderOutputs = null;
-        let pastKeyValues = null;
         let numOutputTokens = 1;
         let shouldContinue = true;
         const maxOutputTokens = numOutputTokens + maxLength;
@@ -32,8 +31,7 @@ class T5ForConditionalGeneration {
         }
         let outputTokenIds = [startOfDecoderTokenId];
         while (shouldContinue && numOutputTokens < maxOutputTokens) {
-            let output = await this.forward(inputTokenIds, outputTokenIds, encoderOutputs, pastKeyValues);
-            pastKeyValues = output.pastKeyValues;
+            let output = await this.forward(inputTokenIds, outputTokenIds, encoderOutputs);
             encoderOutputs = output.encoderOutputs;
             let newTokenId = sampler(output.logits);
             outputTokenIds.push(newTokenId);
@@ -88,7 +86,7 @@ class T5ForConditionalGeneration {
         return logitAndId[0][1];
     }
 
-    async forward(inputIds: number[], decoderInputIds: number[], encoderOutputs: ort.Tensor, pastKeyValues: number[]): Promise<Seq2SeqLMOutput> {
+    async forward(inputIds: number[], decoderInputIds: number[], encoderOutputs: ort.Tensor): Promise<Seq2SeqLMOutput> {
         const inputIdsTensor = new ort.Tensor("int64", new BigInt64Array(inputIds.map(x => BigInt(x))), [1, inputIds.length]);
         const encoderAttentionMaskTensor = new ort.Tensor("int64", new BigInt64Array(inputIds.length).fill(1n), [1, inputIds.length]);
         if (encoderOutputs === null) {
@@ -107,21 +105,9 @@ class T5ForConditionalGeneration {
             "encoder_hidden_states": encoderOutputs,
         };
         let logits = null;
-
-        if (pastKeyValues === null) {
-            const initDecoderResults = await this.initDecoderSession.run(decoderFeeds);
-            logits = initDecoderResults.logits;
-            pastKeyValues = this.getPastKeyValues(this.initDecoderSession.outputNames.slice(1), initDecoderResults);
-        }
-        else {
-            for (const [k, v] of pastKeyValues) {
-                decoderFeeds[k] = v;
-            }
-            const decoderResults = await this.decoderSession.run(decoderFeeds);
-            logits = decoderResults.logits;
-            pastKeyValues = this.getPastKeyValues(this.decoderSession.outputNames.slice(1), decoderResults);
-        }
-        return new Seq2SeqLMOutput(logits, pastKeyValues, encoderOutputs);
+        const initDecoderResults = await this.initDecoderSession.run(decoderFeeds);
+        logits = initDecoderResults.logits;
+        return new Seq2SeqLMOutput(logits, encoderOutputs);
     }
 
     getPastKeyValues(pkvNames, decoderResults) {
@@ -139,9 +125,8 @@ export default T5ForConditionalGeneration
 
 class Seq2SeqLMOutput {
     logits: number[]
-    constructor(logits: number[], pastKeyValues, encoderOutputs) {
+    constructor(logits: number[], encoderOutputs) {
         this.logits = logits;
-        this.pastKeyValues = pastKeyValues;
         this.encoderOutputs = encoderOutputs;
     }
 }
