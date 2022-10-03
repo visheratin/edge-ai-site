@@ -1,26 +1,26 @@
 import React from "react"
+import { SocialIcon } from "react-social-icons"
 
 export default function Footer() {
   return (
     <>
-      <footer className="page-footer orange">
-        <div className="container">
+      <footer className="white">
+        <div className="divider"></div>
+        <div className="container section">
           <div className="row">
-            <div className="col l9 s12">
-              <h5 className="white-text">About the project</h5>
-              <p className="grey-text text-lighten-4">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Et voluptatum laborum aliquid!
-                Saepe dolore nostrum ullam explicabo consequuntur, deserunt ipsum. Temporibus id quas natus
-                recusandae praesentium et est voluptatum blanditiis?
-              </p>
+            <div className="col offset-l3 l1 s4 center-align">
             </div>
-            <div className="col l3 s12">
-              <h5 className="white-text">Contacts</h5>
-              <ul>
-                <li><a className="white-text" href="https://twitter.com/visheratin" target="_blank">Twitter</a></li>
-                <li><a className="white-text" href="https://www.linkedin.com/in/visheratin/" target="_blank">LinkedIn</a></li>
-                <li><a className="white-text" href="mailto:alex@visheratin.com" target="_blank">Email</a></li>
-              </ul>
+            <div className="col l1 s4 center-align">
+              <SocialIcon url="https://github.com/visheratin/edge-ai-site" target="_blank" />
+            </div>
+            <div className="col l1 s4 center-align">
+              <SocialIcon url="https://www.linkedin.com/in/visheratin/" target="_blank" />
+            </div>
+            <div className="col l1 s4 center-align">
+              <SocialIcon url="https://twitter.com/visheratin" target="_blank" />
+            </div>
+            <div className="col l1 s4 center-align">
+              <SocialIcon url="mailto:alex@visheratin.com" target="_blank" />
             </div>
           </div>
         </div>

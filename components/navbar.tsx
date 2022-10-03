@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Navbar() {
   return (
     <>
-      <nav className="light-blue lighten-1" role="navigation">
+      <nav className="green darken-1" role="navigation">
         <div className="nav-wrapper container">
           <Link href="/">
             <a id="logo-container" className="brand-logo">Edge AI</a>
