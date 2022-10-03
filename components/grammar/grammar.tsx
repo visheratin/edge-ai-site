@@ -27,6 +27,7 @@ const GrammarCheckComponent = () => {
 
   // create session context that stores loaded inference sessions
   const [sessionInfo, _] = useSessionContext()
+  const [processedParts, setProcessedParts] = useState({ instance: new Map<string, string>() })
 
   const initModel = async (sessionInfo: SessionInfo) => {
     const response = await fetch(sessionInfo.meta.tokenizer);
@@ -60,6 +61,18 @@ const GrammarCheckComponent = () => {
     return result
   }
 
+  const processTextPart = async (input: string): Promise<string> => {
+    const generationOptions = {
+      "maxLength": 500,
+      "topK": 0,
+    }
+    const inputTokenIds = tokenizer.instance.encode(input)
+    const outputTokenIds = await model.instance.generate(inputTokenIds, generationOptions);
+    let output: string = tokenizer.instance.decode(outputTokenIds, true).trim();
+    output = output.trim()
+    return output
+  }
+
   const processInput = async () => {
     const value = inputRef.current?.value
     if (value === "" || value === undefined) {
@@ -67,25 +80,24 @@ const GrammarCheckComponent = () => {
     }
     let textParts = splitText(value)
     setLoader({ loading: true })
-    const generationOptions = {
-      "maxLength": 500,
-      "topK": 0,
-    }
     let result = ""
     const start = new Date();
     for (let part of textParts) {
       if (part.type === "Str") {
-        const inputTokenIds = tokenizer.instance.encode(part.value)
-        const outputTokenIds = await model.instance.generate(inputTokenIds, generationOptions);
-        let output: string = tokenizer.instance.decode(outputTokenIds, true).trim();
-        output = output.trim()
-        result = result.concat(output)
+        if (processedParts.instance.has(part.value)) {
+          result = result.concat(processedParts.instance.get(part.value))
+        } else {
+          const output = await processTextPart(part.value)
+          result = result.concat(output)
+          processedParts.instance.set(part.value, output)
+        }
       } else {
-        if (part.value !== ".") {
+        if (!result.endsWith(part.value)) {
           result = result.concat(part.value)
         }
       }
     }
+    setProcessedParts({ instance: processedParts.instance })
     const end = new Date();
     const elapsed = (end.getTime() - start.getTime()) / 1000;
     datadogLogs.logger.info('Inference finished.', {
