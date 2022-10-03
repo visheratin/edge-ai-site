@@ -10,6 +10,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       clientToken: 'pub1df46ecb733718bfa44a66ec0e6a5723',
       site: 'datadoghq.com',
       forwardErrorsToLogs: true,
+      silentMultipleInit: true,
       sampleRate: 100,
     })
     console.log("Initialized Datadog")

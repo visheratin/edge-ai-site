@@ -17,9 +17,9 @@ export default function Footer() {
             <div className="col l3 s12">
               <h5 className="white-text">Contacts</h5>
               <ul>
-                <li><a className="white-text" href="https://twitter.com/visheratin">Twitter</a></li>
-                <li><a className="white-text" href="https://www.linkedin.com/in/visheratin/">LinkedIn</a></li>
-                <li><a className="white-text" href="mailto:alex@visheratin.com">Email</a></li>
+                <li><a className="white-text" href="https://twitter.com/visheratin" target="_blank">Twitter</a></li>
+                <li><a className="white-text" href="https://www.linkedin.com/in/visheratin/" target="_blank">LinkedIn</a></li>
+                <li><a className="white-text" href="mailto:alex@visheratin.com" target="_blank">Email</a></li>
               </ul>
             </div>
           </div>
