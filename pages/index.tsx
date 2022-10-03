@@ -97,7 +97,7 @@ const Home: NextPage = () => {
                 </Link>
               </div>
               <div className="card-content">
-                <h6>Microscope images segmentation</h6>
+                <h6><b>Microscope images segmentation</b></h6>
               </div>
               <div className="card-action">
                 <Link href="models/sem-segment">
@@ -116,7 +116,7 @@ const Home: NextPage = () => {
                 </Link>
               </div>
               <div className="card-content">
-                <h6>Standalone grammar correction</h6>
+                <h6><b>Standalone grammar correction</b></h6>
               </div>
               <div className="card-action">
                 <Link href="models/grammar-check">
@@ -135,7 +135,7 @@ const Home: NextPage = () => {
                 </Link>
               </div>
               <div className="card-content">
-                <h6>Semantic images segmentation</h6>
+                <h6><b>Semantic images segmentation</b></h6>
               </div>
               <div className="card-action">
                 <Link href="models/segment">
