@@ -6,8 +6,14 @@ import T5ForConditionalGeneration from "./transformers"
 import { SessionInfo } from "../../data/sessionInfo"
 import { datadogLogs } from "@datadog/browser-logs"
 import { useSessionContext } from "../sessionContext"
+import { split } from "sentence-splitter";
 
 const Diff = require("diff")
+
+interface SentencePart {
+  type: string
+  value: string
+}
 
 const GrammarCheckComponent = () => {
   const [loader, setLoader] = useState({ loading: false })
@@ -39,35 +45,51 @@ const GrammarCheckComponent = () => {
     setInputTimeout({ value: timeout })
   }
 
+  const splitText = (text: string): Array<SentencePart> => {
+    let parts = split(text)
+    let result: Array<SentencePart> = new Array<SentencePart>()
+    for (let part of parts) {
+      if (part.type === "Sentence") {
+        for (let childNode of part.children) {
+          result.push({ type: childNode.type, value: childNode.value })
+        }
+      } else {
+        result.push({ type: part.type, value: part.value })
+      }
+    }
+    return result
+  }
+
   const processInput = async () => {
     const value = inputRef.current?.value
     if (value === "" || value === undefined) {
       return
     }
-    let sentences = value.match(/[^\.!\?]+[\.!\?]+/g)
-    if (sentences === null) {
-      sentences = [value]
-    }
+    let textParts = splitText(value)
     setLoader({ loading: true })
     const generationOptions = {
-      "maxLength": 5000,
+      "maxLength": 500,
       "topK": 0,
     }
     let result = ""
     const start = new Date();
-    for (let sentence of sentences) {
-      sentence = sentence.trim()
-      const inputTokenIds = tokenizer.instance.encode(sentence)
-      const outputTokenIds = await model.instance.generate(inputTokenIds, generationOptions);
-      let output: string = tokenizer.instance.decode(outputTokenIds, true).trim();
-      output = output.trim()
-      result = result.concat(" ", output)
+    for (let part of textParts) {
+      if (part.type === "Str") {
+        const inputTokenIds = tokenizer.instance.encode(part.value)
+        const outputTokenIds = await model.instance.generate(inputTokenIds, generationOptions);
+        let output: string = tokenizer.instance.decode(outputTokenIds, true).trim();
+        output = output.trim()
+        result = result.concat(output)
+      } else {
+        if (part.value !== ".") {
+          result = result.concat(part.value)
+        }
+      }
     }
     const end = new Date();
     const elapsed = (end.getTime() - start.getTime()) / 1000;
     datadogLogs.logger.info('Inference finished.', {
       input_length: value.length,
-      sentences_number: sentences.length,
       elapsed_seconds: elapsed,
     })
     console.log(`Inference time: ${elapsed} seconds.`)

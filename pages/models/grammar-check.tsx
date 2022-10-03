@@ -16,7 +16,7 @@ const GrammarCheck: NextPage = () => {
           <h2 className="header">Standalone grammar correction</h2>
           <div className="col s12">
             <p>
-              Info about the demo
+              Load the model and start typing. The model will run as soon as you stop.
             </p>
           </div>
         </div>
