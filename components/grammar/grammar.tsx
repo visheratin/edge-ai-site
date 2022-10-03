@@ -33,7 +33,7 @@ const GrammarCheckComponent = () => {
     const response = await fetch(sessionInfo.meta.tokenizer);
     const tokenizer = Tokenizer.fromConfig(await response.json());
     setTokenizer({ instance: tokenizer })
-    const model = new T5ForConditionalGeneration(sessionInfo.sessions.get("encoder"), sessionInfo.sessions.get("init-decoder"), sessionInfo.sessions.get("decoder"))
+    const model = new T5ForConditionalGeneration(sessionInfo.sessions.get("encoder"), sessionInfo.sessions.get("decoder"))
     setModel({ instance: model })
   }
 

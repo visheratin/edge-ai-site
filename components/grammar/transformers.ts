@@ -7,12 +7,10 @@ interface GenerateOptions {
 
 class T5ForConditionalGeneration {
     encoderSession: ort.InferenceSession
-    initDecoderSession: ort.InferenceSession
     decoderSession: ort.InferenceSession
 
-    constructor(encoderSession: ort.InferenceSession, initDecoderSession: ort.InferenceSession, decoderSession: ort.InferenceSession) {
+    constructor(encoderSession: ort.InferenceSession, decoderSession: ort.InferenceSession) {
         this.encoderSession = encoderSession
-        this.initDecoderSession = initDecoderSession
         this.decoderSession = decoderSession
     }
 
@@ -105,7 +103,7 @@ class T5ForConditionalGeneration {
             "encoder_hidden_states": encoderOutputs,
         };
         let logits = null;
-        const initDecoderResults = await this.initDecoderSession.run(decoderFeeds);
+        const initDecoderResults = await this.decoderSession.run(decoderFeeds);
         logits = initDecoderResults.logits;
         return new Seq2SeqLMOutput(logits, encoderOutputs);
     }

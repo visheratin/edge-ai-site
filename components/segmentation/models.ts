@@ -26,7 +26,7 @@ const semSegmentationExamples: string[] = [
 
 export const semSegmentationModels: Metadata[] = [
     {
-        title: "Small model (SegFormer B0, 4 MB)",
+        title: "SegFormer B0 quantinized (4 MB)",
         models: new Map<string, string>([
             ["segment-model", "https://edge-ai-models.s3.us-east-2.amazonaws.com/sem-segment/b0.onnx"],
         ]),
@@ -34,7 +34,7 @@ export const semSegmentationModels: Metadata[] = [
         examples: semSegmentationExamples
     },
     {
-        title: "Larger model (SegFormer B1, 14 MB)",
+        title: "SegFormer B1 quantinized (14 MB)",
         models: new Map<string, string>([
             ["segment-model", "https://edge-ai-models.s3.us-east-2.amazonaws.com/sem-segment/b1.onnx"],
         ]),
@@ -42,7 +42,7 @@ export const semSegmentationModels: Metadata[] = [
         examples: semSegmentationExamples
     },
     {
-        title: "Large model (SegFormer B5, 85 MB)",
+        title: "SegFormer B5 quantinized (85 MB)",
         models: new Map<string, string>([
             ["segment-model", "https://edge-ai-models.s3.us-east-2.amazonaws.com/sem-segment/b5.onnx"],
         ]),
@@ -215,7 +215,7 @@ const generalSegmentationExamples: string[] = [
 
 export const generalSegmentationModels: Metadata[] = [
     {
-        title: "Small model (SegFormer B0, 4 MB)",
+        title: "SegFormer B0 quantinized (4 MB)",
         models: new Map<string, string>([
             ["segment-model", "https://edge-ai-models.s3.us-east-2.amazonaws.com/segment/b0.onnx"],
         ]),
@@ -223,7 +223,7 @@ export const generalSegmentationModels: Metadata[] = [
         examples: generalSegmentationExamples
     },
     {
-        title: "Larger model (SegFormer B1, 14 MB)",
+        title: "SegFormer B1 quantinized (14 MB)",
         models: new Map<string, string>([
             ["segment-model", "https://edge-ai-models.s3.us-east-2.amazonaws.com/segment/b1.onnx"],
         ]),
@@ -231,7 +231,7 @@ export const generalSegmentationModels: Metadata[] = [
         examples: generalSegmentationExamples
     },
     {
-        title: "Large model (SegFormer B4, 64 MB)",
+        title: "SegFormer B4 quantinized (64 MB)",
         models: new Map<string, string>([
             ["segment-model", "https://edge-ai-models.s3.us-east-2.amazonaws.com/segment/b4.onnx"],
         ]),
