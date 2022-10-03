@@ -10,11 +10,6 @@ export default function Navbar() {
           </Link>
           <ul className="right hide-on-med-and-down">
             <li>
-              <Link href="/models/segment">
-                <a>Images segmentation</a>
-              </Link>
-            </li>
-            <li>
               <Link href="/models/sem-segment">
                 <a>Microscopy images segmentation</a>
               </Link>
@@ -22,6 +17,11 @@ export default function Navbar() {
             <li>
               <Link href="/models/grammar-check">
                 <a>Grammar check</a>
+              </Link>
+            </li>
+            <li>
+              <Link href="/models/segment">
+                <a>Images segmentation</a>
               </Link>
             </li>
           </ul>

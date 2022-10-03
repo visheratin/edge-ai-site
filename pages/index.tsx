@@ -53,7 +53,31 @@ const Home: NextPage = () => {
               </li>
             </ol>
             <p>
-
+              With the recent advances in deep learning and MLOps, it becomes easier to create ML-powered products and deploy them to edge devices.
+              This project explores how well deep learning models work in the most common edge software - your browser. All demos on this site
+              are built using JavaScript and work in any modern browser - desktop and mobile.
+            </p>
+            <p>
+              The foundation of the project is <a
+                href="https://cloudblogs.microsoft.com/opensource/2021/09/02/onnx-runtime-web-running-your-machine-learning-model-in-browser/" target="_blank">
+                ONNX Runtime Web
+              </a> - the framework that allows running deep learning models in <a
+                href="https://onnxruntime.ai/index.html" target="_blank">
+                ONNX format in the browser
+              </a>.
+              I used pre-trained and fine-tuned models from the <a
+                href="https://huggingface.co/">
+                Hugging Face
+              </a> hub. Thanks to PyTorch's built-in functionality of <a
+                href="https://pytorch.org/docs/stable/onnx.html" target="_blank">
+                exporting models to ONNX
+              </a> and projects like <a
+                href="https://huggingface.co/docs/optimum/index" target="_blank">
+                Optimum
+              </a> and <a
+                href="https://github.com/Ki6an/fastT5" target="_blank">
+                fastT5
+              </a>, it is straightforward to convert models and start using them on the web.
             </p>
           </div>
         </div>

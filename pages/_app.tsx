@@ -13,7 +13,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       silentMultipleInit: true,
       sampleRate: 100,
     })
-    console.log("Initialized Datadog")
   })
 
   return (
