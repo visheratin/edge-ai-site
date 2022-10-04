@@ -90,7 +90,7 @@ const Home: NextPage = () => {
           <div className="col l4 m6 s12">
             <div className="card">
               <div className="card-image">
-                <Link href="models/sem-segment">
+                <Link href="models/sem-segment" passHref={true}>
                   <a>
                     <Image src={bowtiePic} />
                   </a>
@@ -100,7 +100,7 @@ const Home: NextPage = () => {
                 <h6><b>Microscope images segmentation</b></h6>
               </div>
               <div className="card-action">
-                <Link href="models/sem-segment">
+                <Link href="models/sem-segment" passHref={true} >
                   <a>Open demo</a>
                 </Link>
               </div>
@@ -109,7 +109,7 @@ const Home: NextPage = () => {
           <div className="col l4 m6 s12">
             <div className="card">
               <div className="card-image">
-                <Link href="models/grammar-check">
+                <Link href="models/grammar-check" passHref={true}>
                   <a>
                     <Image src={grammarPic} />
                   </a>
@@ -119,7 +119,7 @@ const Home: NextPage = () => {
                 <h6><b>Standalone grammar correction</b></h6>
               </div>
               <div className="card-action">
-                <Link href="models/grammar-check">
+                <Link href="models/grammar-check" passHref={true}>
                   <a>Open demo</a>
                 </Link>
               </div>
@@ -128,7 +128,7 @@ const Home: NextPage = () => {
           <div className="col l4 m6 s12">
             <div className="card">
               <div className="card-image">
-                <Link href="models/segment">
+                <Link href="models/segment" passHref={true}>
                   <a>
                     <Image src={segmentPic} />
                   </a>
@@ -138,7 +138,7 @@ const Home: NextPage = () => {
                 <h6><b>Semantic images segmentation</b></h6>
               </div>
               <div className="card-action">
-                <Link href="models/segment">
+                <Link href="models/segment" passHref={true}>
                   <a>Open demo</a>
                 </Link>
               </div>
