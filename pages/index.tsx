@@ -90,57 +90,45 @@ const Home: NextPage = () => {
           <div className="col l4 m6 s12">
             <div className="card">
               <div className="card-image">
-                <Link href="models/sem-segment" passHref={true}>
-                  <a>
-                    <Image src={bowtiePic} />
-                  </a>
-                </Link>
+                <a href="models/sem-segment">
+                  <Image src={bowtiePic} />
+                </a>
               </div>
               <div className="card-content">
                 <h6><b>Microscope images segmentation</b></h6>
               </div>
               <div className="card-action">
-                <Link href="models/sem-segment" passHref={true} >
-                  <a>Open demo</a>
-                </Link>
+                <a href="models/sem-segment">Open demo</a>
               </div>
             </div>
           </div>
           <div className="col l4 m6 s12">
             <div className="card">
               <div className="card-image">
-                <Link href="models/grammar-check" passHref={true}>
-                  <a>
-                    <Image src={grammarPic} />
-                  </a>
-                </Link>
+                <a href="models/grammar-check">
+                  <Image src={grammarPic} />
+                </a>
               </div>
               <div className="card-content">
                 <h6><b>Standalone grammar correction</b></h6>
               </div>
               <div className="card-action">
-                <Link href="models/grammar-check" passHref={true}>
-                  <a>Open demo</a>
-                </Link>
+                <a href="models/grammar-check">Open demo</a>
               </div>
             </div>
           </div>
           <div className="col l4 m6 s12">
             <div className="card">
               <div className="card-image">
-                <Link href="models/segment" passHref={true}>
-                  <a>
-                    <Image src={segmentPic} />
-                  </a>
-                </Link>
+                <a href="models/segment">
+                  <Image src={segmentPic} />
+                </a>
               </div>
               <div className="card-content">
                 <h6><b>Semantic images segmentation</b></h6>
               </div>
               <div className="card-action">
-                <Link href="models/segment" passHref={true}>
-                  <a>Open demo</a>
-                </Link>
+                <a href="models/segment">Open demo</a>
               </div>
             </div>
           </div>
