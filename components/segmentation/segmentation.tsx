@@ -58,15 +58,6 @@ const SegmentationComponent = (props: SegmentationProps) => {
   }, []);
 
   /**
-   * selectURLImage sets the image data from the URL text input field
-   */
-  const selectURLImage = () => {
-    if (fileURLRef.current && fileURLRef.current.value !== '') {
-      loadImage(fileURLRef.current.value)
-    }
-  }
-
-  /**
    * selectFileImage sets the image data from the file select field
    */
   const selectFileImage = () => {
@@ -256,59 +247,25 @@ const SegmentationComponent = (props: SegmentationProps) => {
         </div>
         <div className="col l6 m6 s12">
           <form action="#" onSubmit={(e) => e.preventDefault()}>
-            <h6>Set the data from URL</h6>
+            <h6>Select the image</h6>
             <div className="row">
-              <div className="col l10 s12">
-                <div className="input-field">
-                  <input ref={fileURLRef} placeholder="Paste image link" type="text" className="validate" />
-                </div>
-              </div>
-              <div className="col l2 s12">
-                <div className="input-field">
-                  <button
-                    className="btn col s12 waves-effect waves-light"
-                    onClick={selectURLImage}
-                    style={{
-                      marginTop: "5px"
-                    }}>
-                    Set
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="divider"></div>
-            <h6>Set the data from local file</h6>
-            <div className="row">
-              <div className="col l10 s12">
+              <div className="col l12 s12">
                 <div className="file-field input-field">
                   <div className="btn">
                     <span>Select</span>
-                    <input ref={fileSelectRef} type="file" />
+                    <input ref={fileSelectRef} type="file" onChange={selectFileImage} />
                   </div>
                   <div className="file-path-wrapper">
                     <input className="file-path validate" type="text" placeholder="Select or drop a file" />
                   </div>
                 </div>
               </div>
-              <div className="col l2 s12">
-                <div className="input-field">
-                  <button
-                    className="btn col s12 waves-effect waves-light"
-                    onClick={selectFileImage}
-                    style={{
-                      marginTop: "5px"
-                    }}>
-                    Set
-                  </button>
-                </div>
-              </div>
             </div>
           </form>
           <div className="row">
             <div className="col l12 m12 s12">
-              <div className="divider"></div>
               <button
-                className="btn col l6 m6 s12 waves-effect waves-light"
+                className="btn col offset-l3 l6 offset-m3 m6 s12 waves-effect waves-light"
                 disabled={imageData.data === null || sessionInfo === null}
                 onClick={processImage}
                 style={{
@@ -319,7 +276,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
             </div>
           </div>
           <div className="divider"></div>
-          <div className="col l12 m12 s12">
+          <div>
             {
               sessionInfo !== null && <ExampleImages imageURLs={sessionInfo.meta.examples} setImageFunc={loadImage} />
             }
