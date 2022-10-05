@@ -263,17 +263,12 @@ const SegmentationComponent = (props: SegmentationProps) => {
             </div>
           </form>
           <div className="row">
-            <div className="col l12 m12 s12">
-              <button
-                className="btn col offset-l3 l6 offset-m3 m6 s12 waves-effect waves-light"
-                disabled={imageData.data === null || sessionInfo === null}
-                onClick={processImage}
-                style={{
-                  marginTop: "10px"
-                }}>
-                Generate segments
-              </button>
-            </div>
+            <button
+              className="btn col offset-l3 l6 offset-m3 m6 s12 waves-effect waves-light"
+              disabled={imageData.data === null || sessionInfo === null}
+              onClick={processImage} >
+              Generate segments
+            </button>
           </div>
           <div className="divider"></div>
           <div>
