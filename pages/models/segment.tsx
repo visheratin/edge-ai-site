@@ -1,9 +1,8 @@
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import { generalSegmentationModels } from '../../components/segmentation/models';
-import SegmentationComponent from '../../components/segmentation/segmentation'
-import { ORTSessionProvider } from '../../components/sessionContext'
-
+import type { NextPage } from "next";
+import Head from "next/head";
+import { generalSegmentationModels } from "../../components/segmentation/models";
+import SegmentationComponent from "../../components/segmentation/segmentation";
+import { ORTSessionProvider } from "../../components/sessionContext";
 
 const SEMSegmentation: NextPage = () => {
   return (
@@ -16,13 +15,14 @@ const SEMSegmentation: NextPage = () => {
         <div className="row">
           <h2 className="header">Semantic images segmentation</h2>
           <div className="col s12">
-            <p>
-              Info about the demo
-            </p>
+            <p>Info about the demo</p>
             <h6>How to use</h6>
             <ol>
               <li>Select the model and load it.</li>
-              <li>Paste image URL, load the image from the device, or select one of example images.</li>
+              <li>
+                Paste image URL, load the image from the device, or select one
+                of example images.
+              </li>
               <li>Generate segments.</li>
             </ol>
           </div>
@@ -32,7 +32,7 @@ const SEMSegmentation: NextPage = () => {
         </div>
       </div>
     </ORTSessionProvider>
-  )
-}
+  );
+};
 
-export default SEMSegmentation
+export default SEMSegmentation;

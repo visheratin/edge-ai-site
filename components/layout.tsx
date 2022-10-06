@@ -1,9 +1,9 @@
 import Navbar from "./navbar";
-import Footer from "./footer"
+import Footer from "./footer";
 import { ReactNode } from "react";
 
 interface Props {
-  children?: ReactNode
+  children?: ReactNode;
 }
 
 const Layout = ({ children, ...props }: Props) => {
@@ -13,7 +13,7 @@ const Layout = ({ children, ...props }: Props) => {
       <main>{children}</main>
       <Footer />
     </>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

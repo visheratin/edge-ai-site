@@ -1,8 +1,7 @@
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import GrammarCheckComponent from '../../components/grammar/grammar';
-import { ORTSessionProvider } from '../../components/sessionContext'
-
+import type { NextPage } from "next";
+import Head from "next/head";
+import GrammarCheckComponent from "../../components/grammar/grammar";
+import { ORTSessionProvider } from "../../components/sessionContext";
 
 const GrammarCheck: NextPage = () => {
   return (
@@ -15,8 +14,10 @@ const GrammarCheck: NextPage = () => {
         <div className="row">
           <h2 className="header">Standalone grammar correction</h2>
           <div className="col s12">
+            <p></p>
             <p>
-              Load the model and start typing. The model will run as soon as you stop.
+              Load the model and start typing. The model will run as soon as you
+              stop.
             </p>
           </div>
         </div>
@@ -25,7 +26,7 @@ const GrammarCheck: NextPage = () => {
         </div>
       </div>
     </ORTSessionProvider>
-  )
-}
+  );
+};
 
-export default GrammarCheck
+export default GrammarCheck;
