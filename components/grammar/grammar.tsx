@@ -95,9 +95,13 @@ const GrammarCheckComponent = () => {
         if (processedParts.instance.has(part.value)) {
           result = result.concat(processedParts.instance.get(part.value));
         } else {
-          const output = await processTextPart(part.value);
-          result = result.concat(output);
-          processedParts.instance.set(part.value, output);
+          if (part.value.length < 2) {
+            result = result.concat(processedParts.instance.get(part.value));
+          } else {
+            const output = await processTextPart(part.value);
+            result = result.concat(output);
+            processedParts.instance.set(part.value, output);
+          }
         }
       } else {
         if (!result.endsWith(part.value)) {
