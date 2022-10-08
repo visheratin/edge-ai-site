@@ -115,6 +115,7 @@ const GrammarCheckComponent = () => {
     datadogLogs.logger.info("Inference finished.", {
       input_length: value.length,
       elapsed_seconds: elapsed,
+      model: sessionInfo.meta.title,
     });
     console.log(`Inference time: ${elapsed} seconds.`);
     setOutput({ value: result });

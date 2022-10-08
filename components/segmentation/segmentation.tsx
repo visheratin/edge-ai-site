@@ -183,6 +183,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
     const output = outputData[session.outputNames[0]];
     datadogLogs.logger.info("Inference finished.", {
       elapsed_seconds: elapsed,
+      model: sessionInfo.meta.title,
     });
     console.log(`Inference time: ${elapsed} seconds.`);
     drawOnCanvas(output);
