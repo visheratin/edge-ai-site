@@ -83,6 +83,7 @@ const GrammarCheckComponent = () => {
       input_length: input.length,
       elapsed_seconds: elapsed,
       model: sessionInfo.meta.title,
+      tokens_length: inputTokenIds.length,
     });
     console.log(`Inference time: ${elapsed} seconds.`);
     let output: string = tokenizer.instance.decode(outputTokenIds, true).trim();
