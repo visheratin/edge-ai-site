@@ -314,6 +314,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
                       className="file-path validate"
                       type="text"
                       placeholder="Select or drop a file"
+                      disabled={status.processing}
                     />
                   </div>
                 </div>
