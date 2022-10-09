@@ -49,6 +49,8 @@ const ModelSelect = (props: ModelSelectProps) => {
       modelPath: modelPath,
       model_size: model_data.byteLength,
       elapsed_seconds: elapsed,
+      num_threads: ort.env.wasm.numThreads,
+      simd: ort.env.wasm.simd,
     });
     console.log(`Session creation time: ${elapsed} seconds.`);
     return session;
