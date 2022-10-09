@@ -124,10 +124,20 @@ class T5ForConditionalGeneration {
       new BigInt64Array(decoderInputIds.map((x) => BigInt(x))),
       [1, decoderInputIds.length]
     );
+    const attentionMaskTensor = new ort.Tensor(
+      "int64",
+      new BigInt64Array(inputIds.length).fill(1n),
+      [1, inputIds.length]
+    );
+    const encoderOutputsClone = structuredClone(encoderOutputs);
+    const encoderOutputsTensor = new ort.Tensor(
+      encoderOutputsClone.data,
+      encoderOutputsClone.dims
+    );
     const decoderFeeds = {
       input_ids: decoderInputIdsTensor,
-      encoder_attention_mask: encoderAttentionMaskTensor,
-      encoder_hidden_states: encoderOutputs,
+      encoder_attention_mask: attentionMaskTensor,
+      encoder_hidden_states: encoderOutputsTensor,
     };
     let logits = null;
     const initDecoderResults = await this.decoderSession.run(decoderFeeds);

@@ -19,7 +19,8 @@ const SegmentationComponent = (props: SegmentationProps) => {
   const imageRef = useRef<HTMLImageElement>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const fileSelectRef = useRef<HTMLInputElement>(null);
-  const fileURLRef = useRef<HTMLInputElement>(null);
+
+  const [status, setStatus] = useState({ processing: false });
 
   // create state store for canvas size properties
   const [displayDims, setDisplayDims] = useState({
@@ -136,11 +137,13 @@ const SegmentationComponent = (props: SegmentationProps) => {
   };
 
   const processImage = async () => {
+    setStatus({ processing: true });
     clearCanvas();
     const tensor = imageDataToTensor(imageData.data, [1, 3, 512, 512]);
     if (sessionInfo.sessions.has("segment-model")) {
-      runInference(tensor);
+      await runInference(tensor);
     }
+    setStatus({ processing: false });
   };
 
   /**
@@ -186,7 +189,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
       model: sessionInfo.meta.title,
     });
     console.log(`Inference time: ${elapsed} seconds.`);
-    drawOnCanvas(output);
+    await drawOnCanvas(output);
   };
 
   /**
@@ -303,6 +306,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
                       ref={fileSelectRef}
                       type="file"
                       onChange={selectFileImage}
+                      disabled={status.processing}
                     />
                   </div>
                   <div className="file-path-wrapper">
@@ -316,10 +320,19 @@ const SegmentationComponent = (props: SegmentationProps) => {
               </div>
             </div>
           </form>
+          <div className="progress">
+            <div
+              className={status.processing ? "indeterminate" : "determinate"}
+            ></div>
+          </div>
           <div className="row">
             <button
               className="btn col offset-l3 l6 offset-m3 m6 s12 waves-effect waves-light"
-              disabled={imageData.data === null || sessionInfo === null}
+              disabled={
+                imageData.data === null ||
+                sessionInfo === null ||
+                status.processing
+              }
               onClick={processImage}
             >
               Generate segments

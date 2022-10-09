@@ -16,7 +16,7 @@ interface SentencePart {
 }
 
 const GrammarCheckComponent = () => {
-  const [loader, setLoader] = useState({ loading: false });
+  const [status, setStatus] = useState({ processing: false });
   const [output, setOutput] = useState({ value: "Here will be the output" });
   const [diff, setDiff] = useState({ value: "" });
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -72,10 +72,19 @@ const GrammarCheckComponent = () => {
       topK: 0,
     };
     const inputTokenIds = tokenizer.instance.encode(input);
+    const start = new Date();
     const outputTokenIds = await model.instance.generate(
       inputTokenIds,
       generationOptions
     );
+    const end = new Date();
+    const elapsed = (end.getTime() - start.getTime()) / 1000;
+    datadogLogs.logger.info("Inference finished.", {
+      input_length: input.length,
+      elapsed_seconds: elapsed,
+      model: sessionInfo.meta.title,
+    });
+    console.log(`Inference time: ${elapsed} seconds.`);
     let output: string = tokenizer.instance.decode(outputTokenIds, true).trim();
     output = output.trim();
     return output;
@@ -87,9 +96,8 @@ const GrammarCheckComponent = () => {
       return;
     }
     let textParts = splitText(value);
-    setLoader({ loading: true });
+    setStatus({ processing: true });
     let result = "";
-    const start = new Date();
     for (let part of textParts) {
       if (part.type === "Str") {
         if (processedParts.instance.has(part.value)) {
@@ -110,14 +118,6 @@ const GrammarCheckComponent = () => {
       }
     }
     setProcessedParts({ instance: processedParts.instance });
-    const end = new Date();
-    const elapsed = (end.getTime() - start.getTime()) / 1000;
-    datadogLogs.logger.info("Inference finished.", {
-      input_length: value.length,
-      elapsed_seconds: elapsed,
-      model: sessionInfo.meta.title,
-    });
-    console.log(`Inference time: ${elapsed} seconds.`);
     setOutput({ value: result });
     const diff = Diff.diffChars(value, result);
     let diffValue = "";
@@ -131,7 +131,7 @@ const GrammarCheckComponent = () => {
       }
     });
     setDiff({ value: diffValue });
-    setLoader({ loading: false });
+    setStatus({ processing: false });
   };
 
   return (
@@ -140,7 +140,7 @@ const GrammarCheckComponent = () => {
       <div className="row">
         <div className="progress">
           <div
-            className={loader.loading ? "indeterminate" : "determinate"}
+            className={status.processing ? "indeterminate" : "determinate"}
           ></div>
         </div>
         <div className="col l12 s12">
@@ -149,7 +149,9 @@ const GrammarCheckComponent = () => {
             ref={inputRef}
             className="materialize-textarea"
             onChange={inputChanged}
-            disabled={!sessionInfo || !sessionInfo.sessions}
+            disabled={
+              !sessionInfo || !sessionInfo.sessions || status.processing
+            }
             placeholder="Start typing here"
           ></textarea>
         </div>

@@ -7,6 +7,7 @@ import { datadogLogs } from "@datadog/browser-logs";
 
 ort.env.wasm.numThreads = 3;
 ort.env.wasm.simd = true;
+ort.env.wasm.proxy = true;
 
 interface ModelSelectProps {
   models: ModelMetadata[];
@@ -93,6 +94,7 @@ const ModelSelect = (props: ModelSelectProps) => {
               ref={modelSelectRef}
               className="browser-default"
               id="modelSelect"
+              disabled={!loader.hidden}
             >
               <option value="" disabled selected>
                 Select the model
@@ -110,6 +112,7 @@ const ModelSelect = (props: ModelSelectProps) => {
             className="btn waves-effect waves-light"
             style={{ width: "100%" }}
             onClick={loadModel}
+            disabled={!loader.hidden}
           >
             Load
           </button>
