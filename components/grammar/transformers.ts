@@ -1,3 +1,9 @@
+/**
+ * This file is a modified version of
+ * https://github.com/praeclarum/transformers-js/blob/main/src/transformers.js
+ *
+ */
+
 import * as ort from "onnxruntime-web";
 
 interface GenerateOptions {
