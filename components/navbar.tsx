@@ -11,7 +11,7 @@ export default function Navbar() {
               <a href="/models/sem-segment">Microscopy images segmentation</a>
             </li>
             <li>
-              <a href="/models/grammar-check">Grammar check</a>
+              <a href="/models/grammar-check">Grammar correction</a>
             </li>
             <li>
               <a href="/models/segment">Images segmentation</a>
