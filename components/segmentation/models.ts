@@ -26,7 +26,7 @@ const semSegmentationExamples: string[] = [
 
 export const semSegmentationModels: Metadata[] = [
   {
-    title: "SegFormer B0 quantinized (4 MB)",
+    title: "SegFormer B0 quantized (4 MB)",
     models: new Map<string, string>([
       [
         "segment-model",
@@ -37,7 +37,7 @@ export const semSegmentationModels: Metadata[] = [
     examples: semSegmentationExamples,
   },
   {
-    title: "SegFormer B1 quantinized (14 MB)",
+    title: "SegFormer B1 quantized (14 MB)",
     models: new Map<string, string>([
       [
         "segment-model",
@@ -48,7 +48,7 @@ export const semSegmentationModels: Metadata[] = [
     examples: semSegmentationExamples,
   },
   {
-    title: "SegFormer B5 quantinized (85 MB)",
+    title: "SegFormer B5 quantized (85 MB)",
     models: new Map<string, string>([
       [
         "segment-model",
@@ -224,7 +224,7 @@ const generalSegmentationExamples: string[] = [
 
 export const generalSegmentationModels: Metadata[] = [
   {
-    title: "SegFormer B0 quantinized (4 MB)",
+    title: "SegFormer B0 quantized (4 MB)",
     models: new Map<string, string>([
       [
         "segment-model",
@@ -235,7 +235,7 @@ export const generalSegmentationModels: Metadata[] = [
     examples: generalSegmentationExamples,
   },
   {
-    title: "SegFormer B1 quantinized (14 MB)",
+    title: "SegFormer B1 quantized (14 MB)",
     models: new Map<string, string>([
       [
         "segment-model",
@@ -246,7 +246,7 @@ export const generalSegmentationModels: Metadata[] = [
     examples: generalSegmentationExamples,
   },
   {
-    title: "SegFormer B4 quantinized (64 MB)",
+    title: "SegFormer B4 quantized (64 MB)",
     models: new Map<string, string>([
       [
         "segment-model",

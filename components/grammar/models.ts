@@ -2,7 +2,7 @@ import { Metadata } from "./metadata";
 
 export const grammarModels: Metadata[] = [
   {
-    title: "T5 Efficient TINY quantinized (32 MB)",
+    title: "T5 Efficient TINY quantized (32 MB)",
     models: new Map<string, string>([
       [
         "encoder",
@@ -18,7 +18,7 @@ export const grammarModels: Metadata[] = [
     examples: [],
   },
   {
-    title: "T5 Efficient MINI quantinized (55 MB)",
+    title: "T5 Efficient MINI quantized (55 MB)",
     models: new Map<string, string>([
       [
         "encoder",
