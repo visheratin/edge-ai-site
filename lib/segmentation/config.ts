@@ -11,6 +11,13 @@ export class Config {
 
   initFromHub = async (configPath: string, preprocessorPath: string) => {
     const configData = await fetch(configPath).then((resp) => resp.json());
+    this.parseConfig(configData);
+    this.preprocessor = new PreprocessorConfig();
+    await this.preprocessor.initFromHub(preprocessorPath);
+    this.validate();
+  };
+
+  parseConfig = (configData) => {
     for (const [idxString, className] of Object.entries(
       configData["id2label"]
     )) {
@@ -20,9 +27,6 @@ export class Config {
       const color = this.convertToRGB(hexColor);
       this.colors.set(idx, color);
     }
-    this.preprocessor = new PreprocessorConfig();
-    await this.preprocessor.initFromHub(preprocessorPath);
-    this.validate();
   };
 
   validate = () => {
@@ -88,6 +92,10 @@ export class PreprocessorConfig {
 
   initFromHub = async (configPath: string) => {
     const configData = await fetch(configPath).then((resp) => resp.json());
+    this.parseConfig(configData);
+  };
+
+  parseConfig = (configData) => {
     this.normalize = {
       enabled: configData["do_normalize"],
       mean: configData["image_mean"],
