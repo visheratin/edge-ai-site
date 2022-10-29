@@ -7,14 +7,13 @@ import { Tensor } from "../tensor";
 
 type SegmentationResult = {
   data: HTMLCanvasElement;
-  argmax: Tensor;
   elapsed: number;
 };
 
 export class SegmentationModel {
-  metadata: Metadata;
-  config: Config | null;
-  session: ort.InferenceSession | null;
+  private metadata: Metadata;
+  private config: Config | null;
+  private session: ort.InferenceSession | null;
 
   constructor(metadata: Metadata, config: Config | null) {
     this.metadata = metadata;
@@ -22,15 +21,19 @@ export class SegmentationModel {
     this.config = config;
   }
 
-  init = async (logFunc: (elapsed: number) => void | null) => {
-    this.session = await createSession(this.metadata.modelPath, logFunc);
+  init = async (): Promise<number> => {
+    const start = new Date();
+    this.session = await createSession(this.metadata.modelPath);
     if (this.config === null) {
       this.config = new Config();
+      await this.config.initFromHub(
+        this.metadata.configPath,
+        this.metadata.preprocessorPath
+      );
     }
-    await this.config.initFromHub(
-      this.metadata.configPath,
-      this.metadata.preprocessorPath
-    );
+    const end = new Date();
+    const elapsed = (end.getTime() - start.getTime()) / 1000;
+    return elapsed;
   };
 
   process = async (
@@ -80,12 +83,28 @@ export class SegmentationModel {
     const result: SegmentationResult = {
       data: resCanvas,
       elapsed: elapsed,
-      argmax: argmax,
     };
     return result;
   };
 
-  argmaxColors = (tensor: ort.Tensor): number[][] => {
+  getClass = (inputColor: Uint8ClampedArray | number[]): string => {
+    let className = "";
+    let minDiff = Infinity;
+    let diff = 0;
+    for (let [idx, color] of this.config?.colors) {
+      diff =
+        Math.abs(color[0] - inputColor[0]) +
+        Math.abs(color[1] - inputColor[1]) +
+        Math.abs(color[2] - inputColor[2]);
+      if (diff < minDiff) {
+        minDiff = diff;
+        className = this.config?.classes.get(idx);
+      }
+    }
+    return className;
+  };
+
+  private argmaxColors = (tensor: ort.Tensor): number[][] => {
     const modelClasses = this.config?.colors;
     let result: number[][] = [];
     const size = 128 * 128;
@@ -111,7 +130,7 @@ export class SegmentationModel {
    * @param dims target dimensions of the tensor
    * @returns ORT tensor
    */
-  imageDataToTensor = (image: Jimp, dims: number[]): ort.Tensor => {
+  private imageDataToTensor = (image: Jimp, dims: number[]): ort.Tensor => {
     var imageBufferData = image.bitmap.data;
     const [redArray, greenArray, blueArray] = new Array(
       new Array<number>(),
@@ -160,9 +179,9 @@ export class SegmentationModel {
     return inputTensor;
   };
 
-  runInference = async (input: ort.Tensor): Promise<Tensor> => {
+  private runInference = async (input: ort.Tensor): Promise<Tensor> => {
     const feeds: Record<string, ort.Tensor> = {};
-    feeds[this.session.inputNames[0]] = input;
+    feeds[this.session!.inputNames[0]] = input;
     const outputData = await this.session.run(feeds);
     const output = outputData[this.session.outputNames[0]];
     return new Tensor(output);

@@ -1,10 +1,5 @@
 import Jimp from "jimp";
 import { useLayoutEffect, useRef, useState } from "react";
-import { Tensor } from "onnxruntime-web";
-import { useSessionContext } from "../sessionContext";
-import * as ort from "onnxruntime-web";
-import SelectModel from "../selectModel";
-import ColorSchema from "./colorSchema";
 import ExampleImages from "./exampleImages";
 import { ModelMetadata } from "../../data/modelMeta";
 import { datadogLogs } from "@datadog/browser-logs";
@@ -40,13 +35,11 @@ const SegmentationComponent = (props: SegmentationProps) => {
       examples: [],
     };
     const model = new SegmentationModel(metadata, null);
-    const logFunc = (elapsed: number) => {
-      datadogLogs.logger.info("Inference session was created.", {
-        modelPath: metadata.modelPath,
-        elapsed_seconds: elapsed,
-      });
-    };
-    await model.init(logFunc);
+    const elapsed = await model.init();
+    datadogLogs.logger.info("Model was created.", {
+      modelPath: metadata.modelPath,
+      elapsed_seconds: elapsed,
+    });
     setModel({ instance: model });
     setStatus({ processing: false });
   };
@@ -108,24 +101,12 @@ const SegmentationComponent = (props: SegmentationProps) => {
 
   const getClass = (e) => {
     const canvas = canvasRef.current;
-    var rect = canvas!.getBoundingClientRect();
+    const rect = canvas!.getBoundingClientRect();
     const ctx = canvas!.getContext("2d");
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    var c = ctx!.getImageData(x, y, 1, 1).data;
-    let className = "";
-    let minDiff = Infinity;
-    let diff = 0;
-    for (let [idx, color] of model.instance.config?.colors) {
-      diff =
-        Math.abs(color[0] - c[0]) +
-        Math.abs(color[1] - c[1]) +
-        Math.abs(color[2] - c[2]);
-      if (diff < minDiff) {
-        minDiff = diff;
-        className = model.instance.config?.classes.get(idx);
-      }
-    }
+    const c = ctx!.getImageData(x, y, 1, 1).data;
+    const className = model.instance.getClass(c);
     setClassName({ value: className });
   };
 
