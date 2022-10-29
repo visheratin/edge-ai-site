@@ -23,7 +23,9 @@ export class Config {
     )) {
       const idx = Number(idxString);
       this.classes.set(idx, className);
-      const hexColor = Math.floor(Math.random() * 16777215).toString(16);
+      const hexColor = Math.floor(Math.random() * 16777215)
+        .toString(16)
+        .padStart(6, "0");
       const color = this.convertToRGB(hexColor);
       this.colors.set(idx, color);
     }
@@ -66,7 +68,7 @@ export class Config {
     hexColor = hexColor.replace("#", "");
     const rgbValue = hexColor.match(/.{1,2}/g);
     if (rgbValue === null || rgbValue.length != 3) {
-      throw new Error("invalid hex color");
+      throw new Error(`invalid hex color: ${hexColor}`);
     }
     const result = [
       parseInt(rgbValue[0], 16),
@@ -105,3 +107,5 @@ export class PreprocessorConfig {
     this.size = configData["size"];
   };
 }
+
+export default Config;

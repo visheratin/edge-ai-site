@@ -6,7 +6,7 @@ import Jimp from "jimp";
 import { Tensor } from "../tensor";
 
 type SegmentationResult = {
-  data: ImageData;
+  data: HTMLCanvasElement;
   argmax: Tensor;
   elapsed: number;
 };
@@ -36,7 +36,17 @@ export class SegmentationModel {
   process = async (
     input: string | ArrayBuffer
   ): Promise<SegmentationResult> => {
-    const image = await this.loadImage(input);
+    let image = await Jimp.read(input);
+    if (
+      this.config &&
+      this.config.preprocessor &&
+      this.config.preprocessor.resize
+    ) {
+      image = image.resize(
+        this.config.preprocessor.size,
+        this.config.preprocessor.size
+      );
+    }
     const tensor = this.imageDataToTensor(image, [
       1,
       3,
@@ -47,66 +57,52 @@ export class SegmentationModel {
     const output = await this.runInference(tensor);
     const end = new Date();
     const elapsed = (end.getTime() - start.getTime()) / 1000;
-    const argmax = output.argmax(2);
-    const size = argmax.ortTensor.dims[0] * argmax.ortTensor.dims[1] * 4;
+    const argmax = this.argmaxColors(output.ortTensor);
+    const size = output.ortTensor.dims[2] * output.ortTensor.dims[3] * 4;
     const arrayBuffer = new ArrayBuffer(size);
     const pixels = new Uint8ClampedArray(arrayBuffer);
-    for (let i = 0; i < argmax.ortTensor.data.length; i++) {
-      const idx = argmax.ortTensor.data[i];
-      if (this.config && this.config.colors && this.config.colors.has(idx)) {
-        const color = this.config.colors.get(idx);
-        pixels[i] = color[0];
-        pixels[i + 1] = color[1];
-        pixels[i + 2] = color[2];
-        pixels[i + 3] = 0;
-      } else {
-        pixels[i] = 0;
-        pixels[i + 1] = 0;
-        pixels[i + 2] = 0;
-        pixels[i + 3] = 0;
-      }
+    for (let i = 0; i < size; i += 4) {
+      const color = argmax[i / 4];
+      pixels[i] = color[0];
+      pixels[i + 1] = color[1];
+      pixels[i + 2] = color[2];
+      pixels[i + 3] = 120;
     }
-    let c = document.createElement("canvas");
-    c.width = image.bitmap.width;
-    c.height = image.bitmap.height;
     const imageData = new ImageData(
       pixels,
-      argmax.ortTensor.dims[0],
-      argmax.ortTensor.dims[1]
+      output.ortTensor.dims[2],
+      output.ortTensor.dims[3]
     );
-    const ctx = c.getContext("2d");
-    ctx!.putImageData(imageData, 0, 0, 0, 0, c.width, c.height);
+    let resCanvas = document.createElement("canvas");
+    resCanvas.width = imageData.width;
+    resCanvas.height = imageData.height;
+    resCanvas.getContext("2d").putImageData(imageData, 0, 0);
     const result: SegmentationResult = {
-      data: imageData,
+      data: resCanvas,
       elapsed: elapsed,
       argmax: argmax,
     };
     return result;
   };
 
-  loadImage = async (src: string | ArrayBuffer): Promise<Jimp> => {
-    const data = await Jimp.read(src);
-    const imageData = new ImageData(
-      new Uint8ClampedArray(data.bitmap.data),
-      data.bitmap.width,
-      data.bitmap.height
-    );
-    let c = document.createElement("canvas");
-    c.width = data.bitmap.width;
-    c.height = data.bitmap.height;
-    const ctx = c.getContext("2d");
-    ctx!.putImageData(imageData, 0, 0);
-    if (
-      this.config &&
-      this.config.preprocessor &&
-      this.config.preprocessor.resize
-    ) {
-      return data.resize(
-        this.config.preprocessor.size,
-        this.config.preprocessor.size
-      );
+  argmaxColors = (tensor: ort.Tensor): number[][] => {
+    const modelClasses = this.config?.colors;
+    let result: number[][] = [];
+    const size = 128 * 128;
+    let classNumbers = new Set<number>();
+    for (let idx = 0; idx < size; idx++) {
+      let maxIdx = 0;
+      let maxValue = -1000;
+      for (let i = 0; i < modelClasses.size; i++) {
+        if (tensor.data[idx + i * size] > maxValue) {
+          maxValue = tensor.data[idx + i * size];
+          maxIdx = i;
+        }
+      }
+      classNumbers.add(maxIdx);
+      result.push(modelClasses?.get(maxIdx));
     }
-    return data;
+    return result;
   };
 
   /**
