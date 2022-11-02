@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build && next export",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest"
   },
   "dependencies": {
     "@datadog/browser-logs": "^4.20.0",
@@ -22,7 +23,8 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-social-icons": "^5.15.0",
-    "sentence-splitter": "^3.2.2"
+    "sentence-splitter": "^3.2.2",
+    "ts-jest": "^29.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.19.6",

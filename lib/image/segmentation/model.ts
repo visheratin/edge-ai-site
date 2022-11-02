@@ -1,9 +1,11 @@
-import Config from "./config";
+import Config from "../config";
 import { Metadata } from "./metadata";
 import * as ort from "onnxruntime-web";
-import { createSession } from "../session";
+import { createSession } from "../../session";
 import Jimp from "jimp";
-import { Tensor } from "../tensor";
+import { Tensor } from "../../tensor";
+import Preprocessor from "../preprocessor";
+import PreprocessorConfig from "../preprocessorConfig";
 
 type SegmentationResult = {
   data: HTMLCanvasElement;
@@ -13,6 +15,7 @@ type SegmentationResult = {
 export class SegmentationModel {
   private metadata: Metadata;
   private config: Config | null;
+  private preprocessor: Preprocessor;
   private session: ort.InferenceSession | null;
 
   constructor(metadata: Metadata, config: Config | null) {
@@ -24,12 +27,12 @@ export class SegmentationModel {
   init = async (): Promise<number> => {
     const start = new Date();
     this.session = await createSession(this.metadata.modelPath);
+    const preprocessorConfig = await PreprocessorConfig.fromFile(
+      this.metadata.preprocessorPath
+    );
+    this.preprocessor = new Preprocessor(preprocessorConfig);
     if (this.config === null) {
-      this.config = new Config();
-      await this.config.initFromHub(
-        this.metadata.configPath,
-        this.metadata.preprocessorPath
-      );
+      this.config = await Config.fromFile(this.metadata.configPath);
     }
     const end = new Date();
     const elapsed = (end.getTime() - start.getTime()) / 1000;
@@ -39,23 +42,8 @@ export class SegmentationModel {
   process = async (
     input: string | ArrayBuffer
   ): Promise<SegmentationResult> => {
-    let image = await Jimp.read(input);
-    if (
-      this.config &&
-      this.config.preprocessor &&
-      this.config.preprocessor.resize
-    ) {
-      image = image.resize(
-        this.config.preprocessor.size,
-        this.config.preprocessor.size
-      );
-    }
-    const tensor = this.imageDataToTensor(image, [
-      1,
-      3,
-      image.bitmap.width,
-      image.bitmap.height,
-    ]);
+    const image = await Jimp.read(input);
+    const tensor = this.preprocessor.process(image);
     const start = new Date();
     const output = await this.runInference(tensor);
     const end = new Date();
@@ -69,7 +57,7 @@ export class SegmentationModel {
       pixels[i] = color[0];
       pixels[i + 1] = color[1];
       pixels[i + 2] = color[2];
-      pixels[i + 3] = 120;
+      pixels[i + 3] = 255;
     }
     const imageData = new ImageData(
       pixels,
@@ -122,61 +110,6 @@ export class SegmentationModel {
       result.push(modelClasses?.get(maxIdx));
     }
     return result;
-  };
-
-  /**
-   * imageDataToTensor converts Jimp image to ORT tensor
-   * @param image instance of Jimp image
-   * @param dims target dimensions of the tensor
-   * @returns ORT tensor
-   */
-  private imageDataToTensor = (image: Jimp, dims: number[]): ort.Tensor => {
-    var imageBufferData = image.bitmap.data;
-    const [redArray, greenArray, blueArray] = new Array(
-      new Array<number>(),
-      new Array<number>(),
-      new Array<number>()
-    );
-    for (let i = 0; i < imageBufferData.length; i += 4) {
-      if (
-        this.config &&
-        this.config.preprocessor &&
-        this.config.preprocessor.normalize.enabled &&
-        this.config.preprocessor.normalize.mean &&
-        this.config.preprocessor.normalize.std
-      ) {
-        let value =
-          (imageBufferData[i] / 255.0 -
-            this.config.preprocessor.normalize.mean[0]) /
-          this.config.preprocessor.normalize.std[0];
-        redArray.push(value);
-        value =
-          (imageBufferData[i + 1] / 255.0 -
-            this.config.preprocessor.normalize.mean[1]) /
-          this.config.preprocessor.normalize.std[1];
-        greenArray.push(value);
-        value =
-          (imageBufferData[i + 2] / 255.0 -
-            this.config.preprocessor.normalize.mean[2]) /
-          this.config.preprocessor.normalize.std[2];
-        blueArray.push(value);
-      } else {
-        let value = imageBufferData[i] / 255.0;
-        redArray.push(value);
-        value = imageBufferData[i + 1] / 255.0;
-        greenArray.push(value);
-        value = imageBufferData[i + 2] / 255.0;
-        blueArray.push(value);
-      }
-    }
-    const transposedData = redArray.concat(greenArray).concat(blueArray);
-    const l = transposedData.length;
-    const float32Data = new Float32Array(dims[1] * dims[2] * dims[3]);
-    for (let i = 0; i < l; i++) {
-      float32Data[i] = transposedData[i];
-    }
-    const inputTensor = new ort.Tensor("float32", float32Data, dims);
-    return inputTensor;
   };
 
   private runInference = async (input: ort.Tensor): Promise<Tensor> => {

@@ -1,4 +1,4 @@
-import { Tensor } from "./tensor";
+import { Tensor } from "../lib/tensor";
 import { Tensor as OrtTensor } from "onnxruntime-web";
 
 test("2D array", () => {

@@ -3,8 +3,8 @@ import { useLayoutEffect, useRef, useState } from "react";
 import ExampleImages from "./exampleImages";
 import { ModelMetadata } from "../../data/modelMeta";
 import { datadogLogs } from "@datadog/browser-logs";
-import { SegmentationModel } from "../../lib/segmentation/model";
-import { Metadata } from "../../lib/segmentation/metadata";
+import { SegmentationModel } from "../../lib/image/segmentation/model";
+import { Metadata } from "../../lib/image/segmentation/metadata";
 
 interface SegmentationProps {
   models: ModelMetadata[];
@@ -134,6 +134,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
     const result = await model.instance.process(src);
     const canvas = canvasRef.current;
     var destCtx = canvas!.getContext("2d");
+    destCtx.globalAlpha = 0.4;
     destCtx!.drawImage(
       result.data,
       0,
@@ -157,7 +158,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
               ref={modelURLRef}
               placeholder="Put model URL here"
               type="text"
-              value="https://edge-ai-models.s3.us-east-2.amazonaws.com/segment/b0.onnx"
+              value="https://huggingface.co/nvidia/segformer-b0-finetuned-ade-512-512/resolve/refs%2Fpr%2F3/model_quant.onnx"
             />
             <label>Model file</label>
           </div>

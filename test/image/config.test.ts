@@ -1,31 +1,4 @@
-import { Config, PreprocessorConfig } from "./config";
-
-test("parse preprocessor config", () => {
-  const data = {
-    do_normalize: true,
-    do_resize: true,
-    feature_extractor_type: "SegformerFeatureExtractor",
-    image_mean: [0.485, 0.456, 0.406],
-    image_std: [0.229, 0.224, 0.225],
-    reduce_labels: true,
-    resample: 2,
-    size: 512,
-  };
-  let expected = {
-    normalize: {
-      enabled: true,
-      mean: [0.485, 0.456, 0.406],
-      std: [0.229, 0.224, 0.225],
-    },
-    resize: true,
-    size: 512,
-  };
-  let config = new PreprocessorConfig();
-  config.parseConfig(data);
-  expect(config.normalize).toEqual(expected.normalize);
-  expect(config.resize).toEqual(expected.resize);
-  expect(config.size).toEqual(expected.size);
-});
+import { Config } from "../../lib/image/config";
 
 test("parse config", () => {
   const data = {
@@ -119,8 +92,7 @@ test("parse config", () => {
       [18, "bicycle"],
     ]),
   };
-  let config = new Config();
-  config.parseConfig(data);
+  const config = Config.parseConfig(data);
   expect(config.classes).toEqual(expected.classes);
 });
 
