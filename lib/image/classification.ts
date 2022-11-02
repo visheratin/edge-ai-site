@@ -1,11 +1,11 @@
-import Config from "../config";
-import { Metadata } from "../metadata";
+import Config from "./config";
+import { Metadata } from "./metadata";
 import * as ort from "onnxruntime-web";
-import { createSession } from "../../session";
+import { createSession } from "../session";
 import Jimp from "jimp";
-import { Tensor } from "../../tensor";
-import Preprocessor from "../preprocessor";
-import PreprocessorConfig from "../preprocessorConfig";
+import { Tensor } from "../tensor";
+import Preprocessor from "./preprocessor";
+import PreprocessorConfig from "./preprocessorConfig";
 
 export type ClassificationPrediction = {
   class: string;

@@ -7,7 +7,7 @@ import {
   ClassificationModel,
   ClassificationPrediction,
   ClassificationResult,
-} from "../../lib/image/classification/model";
+} from "../../lib/image/classification";
 
 interface ClassificationProps {
   models: Metadata[];

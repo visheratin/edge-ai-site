@@ -2,7 +2,7 @@ import Jimp from "jimp";
 import { useLayoutEffect, useRef, useState } from "react";
 import ExampleImages from "./exampleImages";
 import { datadogLogs } from "@datadog/browser-logs";
-import { SegmentationModel } from "../../lib/image/segmentation/model";
+import { SegmentationModel } from "../../lib/image/segmentation";
 import { Metadata } from "../../lib/image/metadata";
 
 interface SegmentationProps {
