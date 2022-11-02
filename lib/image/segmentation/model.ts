@@ -1,5 +1,5 @@
 import Config from "../config";
-import { Metadata } from "./metadata";
+import { Metadata } from "../metadata";
 import * as ort from "onnxruntime-web";
 import { createSession } from "../../session";
 import Jimp from "jimp";
@@ -13,7 +13,7 @@ type SegmentationResult = {
 };
 
 export class SegmentationModel {
-  private metadata: Metadata;
+  metadata: Metadata;
   private config: Config | null;
   private preprocessor: Preprocessor;
   private session: ort.InferenceSession | null;

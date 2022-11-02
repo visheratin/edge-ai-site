@@ -1,8 +1,8 @@
 import type { NextPage } from "next";
 import SegmentationComponent from "../../components/segmentation/segmentation";
-import { semSegmentationModels } from "../../components/segmentation/models";
 import { ORTSessionProvider } from "../../components/sessionContext";
 import Head from "next/head";
+import { semSegmentationModels } from "../../components/segmentation/models";
 
 const SEMSegmentation: NextPage = () => {
   return (

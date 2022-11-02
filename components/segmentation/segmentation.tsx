@@ -1,16 +1,12 @@
 import Jimp from "jimp";
 import { useLayoutEffect, useRef, useState } from "react";
-import { Tensor } from "onnxruntime-web";
-import { useSessionContext } from "../sessionContext";
-import * as ort from "onnxruntime-web";
-import SelectModel from "../selectModel";
-import ColorSchema from "./colorSchema";
 import ExampleImages from "./exampleImages";
-import { ModelMetadata } from "../../data/modelMeta";
 import { datadogLogs } from "@datadog/browser-logs";
+import { SegmentationModel } from "../../lib/image/segmentation/model";
+import { Metadata } from "../../lib/image/metadata";
 
 interface SegmentationProps {
-  models: ModelMetadata[];
+  models: Metadata[];
 }
 
 const SegmentationComponent = (props: SegmentationProps) => {
@@ -19,6 +15,28 @@ const SegmentationComponent = (props: SegmentationProps) => {
   const imageRef = useRef<HTMLImageElement>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const fileSelectRef = useRef<HTMLInputElement>(null);
+  const modelSelectRef = useRef<HTMLSelectElement>(null); // reference for the model selector element
+
+  const [model, setModel] = useState({
+    instance: new SegmentationModel({}, null),
+  });
+
+  const loadModel = async () => {
+    setStatus({ processing: true });
+    const selectedIdx = modelSelectRef.current?.selectedIndex;
+    if (selectedIdx === 0) {
+      return;
+    }
+    const metadata = props.models[selectedIdx];
+    const model = new SegmentationModel(metadata, null);
+    const elapsed = await model.init();
+    datadogLogs.logger.info("Model was created.", {
+      modelPath: metadata.modelPath,
+      elapsed_seconds: elapsed,
+    });
+    setModel({ instance: model });
+    setStatus({ processing: false });
+  };
 
   const [status, setStatus] = useState({ processing: false });
 
@@ -27,18 +45,6 @@ const SegmentationComponent = (props: SegmentationProps) => {
     width: 0,
     height: 0,
     aspectRatio: 1,
-  });
-
-  // create session context that stores loaded inference sessions
-  const [sessionInfo, _] = useSessionContext();
-
-  // Create state for the image data. We need to have such state because
-  // the image data is set separately via URL, form file, or sample image.
-  // We set the state from these sources and use it in the processing method.
-  const [imageData, setImageData] = useState({ data: null });
-
-  const [foundClassIdx, setFoundClassIdx] = useState({
-    indices: new Set<number>(),
   });
 
   const [className, setClassName] = useState({ value: "none" });
@@ -89,25 +95,12 @@ const SegmentationComponent = (props: SegmentationProps) => {
 
   const getClass = (e) => {
     const canvas = canvasRef.current;
-    var rect = canvas!.getBoundingClientRect();
+    const rect = canvas!.getBoundingClientRect();
     const ctx = canvas!.getContext("2d");
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    var c = ctx!.getImageData(x, y, 1, 1).data;
-    let className = "";
-    let minDiff = Infinity;
-    let diff = 0;
-    for (let cls of sessionInfo.meta.classes) {
-      diff =
-        Math.abs(cls.color[0] - c[0]) +
-        Math.abs(cls.color[1] - c[1]) +
-        Math.abs(cls.color[2] - c[2]) +
-        Math.abs(cls.color[3] - c[3]);
-      if (diff < minDiff) {
-        minDiff = diff;
-        className = cls.name;
-      }
-    }
+    const c = ctx!.getImageData(x, y, 1, 1).data;
+    const className = model.instance.getClass(c);
     setClassName({ value: className });
   };
 
@@ -117,151 +110,81 @@ const SegmentationComponent = (props: SegmentationProps) => {
    * @param src can be either URL or array buffer
    */
   const loadImage = async (src: any) => {
-    clearCanvas();
-    var imgData = await Jimp.read(src).then((imageBuffer: Jimp) => {
-      setCanvasSize(imageBuffer.bitmap.height / imageBuffer.bitmap.width);
-      const imageData = new ImageData(
-        new Uint8ClampedArray(imageBuffer.bitmap.data),
-        imageBuffer.bitmap.width,
-        imageBuffer.bitmap.height
-      );
-      let c = document.createElement("canvas");
-      c.width = imageBuffer.bitmap.width;
-      c.height = imageBuffer.bitmap.height;
-      const ctx = c.getContext("2d");
-      ctx!.putImageData(imageData, 0, 0);
-      imageRef.current.src = c.toDataURL("image/png");
-      return imageBuffer.resize(512, 512);
-    });
-    setImageData({ data: imgData });
-  };
-
-  const processImage = async () => {
     setStatus({ processing: true });
-    clearCanvas();
-    const tensor = imageDataToTensor(imageData.data, [1, 3, 512, 512]);
-    if (sessionInfo.sessions.has("segment-model")) {
-      await runInference(tensor);
-    }
-    setStatus({ processing: false });
-  };
-
-  /**
-   * imageDataToTensor converts Jimp image to ORT tensor
-   * @param image instance of Jimp image
-   * @param dims target dimensions of the tensor
-   * @returns ORT tensor
-   */
-  const imageDataToTensor = (image: Jimp, dims: number[]): Tensor => {
-    var imageBufferData = image.bitmap.data;
-    const [redArray, greenArray, blueArray] = new Array(
-      new Array<number>(),
-      new Array<number>(),
-      new Array<number>()
+    var imageBuffer = await Jimp.read(src);
+    setCanvasSize(imageBuffer.bitmap.height / imageBuffer.bitmap.width);
+    const imageData = new ImageData(
+      new Uint8ClampedArray(imageBuffer.bitmap.data),
+      imageBuffer.bitmap.width,
+      imageBuffer.bitmap.height
     );
-    for (let i = 0; i < imageBufferData.length; i += 4) {
-      redArray.push((imageBufferData[i] / 255.0 - 0.485) / 0.229);
-      greenArray.push((imageBufferData[i + 1] / 255.0 - 0.456) / 0.224);
-      blueArray.push((imageBufferData[i + 2] / 255.0 - 0.406) / 0.225);
-    }
-    const transposedData = redArray.concat(greenArray).concat(blueArray);
-    let i,
-      l = transposedData.length;
-    const float32Data = new Float32Array(dims[1] * dims[2] * dims[3]);
-    for (i = 0; i < l; i++) {
-      float32Data[i] = transposedData[i];
-    }
-    const inputTensor = new Tensor("float32", float32Data, dims);
-    return inputTensor;
-  };
-
-  const runInference = async (tensor: Tensor) => {
-    const session = sessionInfo.sessions.get("segment-model");
-    const start = new Date();
-    const feeds: Record<string, ort.Tensor> = {};
-    feeds[session.inputNames[0]] = tensor;
-    const outputData = await session.run(feeds);
-    const end = new Date();
-    const elapsed = (end.getTime() - start.getTime()) / 1000;
-    const output = outputData[session.outputNames[0]];
-    datadogLogs.logger.info("Inference finished.", {
-      elapsed_seconds: elapsed,
-      model: sessionInfo.meta.title,
-    });
-    console.log(`Inference time: ${elapsed} seconds.`);
-    await drawOnCanvas(output);
-  };
-
-  /**
-   * drawOnCanvas projects the result of running the inference onto the canvas.
-   * @param tensor output tensor from running the inference
-   */
-  const drawOnCanvas = async (tensor: Tensor) => {
-    let i = 0;
-    const size = 128 * 128 * 4;
-    const arrayBuffer = new ArrayBuffer(size);
-    const pixels = new Uint8ClampedArray(arrayBuffer);
-    let idx = 0;
     let c = document.createElement("canvas");
-    c.width = 128;
-    c.height = 128;
-    const argMaxArray = outputArgMax(tensor);
-    for (i = 0; i < size; i += 4) {
-      idx = Math.round(i / 4);
-      const color = argMaxArray[idx];
-      pixels[i] = color[0];
-      pixels[i + 1] = color[1];
-      pixels[i + 2] = color[2];
-      pixels[i + 3] = color[3];
-    }
-    const imageData = new ImageData(pixels, 128, 128);
+    c.width = imageBuffer.bitmap.width;
+    c.height = imageBuffer.bitmap.height;
     const ctx = c.getContext("2d");
     ctx!.putImageData(imageData, 0, 0);
+    imageRef.current.src = c.toDataURL("image/png");
+    clearCanvas();
+    const result = await model.instance.process(src);
     const canvas = canvasRef.current;
     var destCtx = canvas!.getContext("2d");
+    destCtx.globalAlpha = 0.4;
     destCtx!.drawImage(
-      c,
+      result.data,
       0,
       0,
-      c.width,
-      c.height,
+      result.data.width,
+      result.data.height,
       0,
       0,
       canvas!.width,
       canvas!.height
     );
-  };
-
-  /**
-   * outputArgMax calculates argmax for every value in the resulting tensor and assigns
-   * the color value to it according to the color schema of the model.
-   * @param tensor
-   * @returns
-   */
-  const outputArgMax = (tensor: Tensor): number[][] => {
-    const modelClasses = sessionInfo.meta.classes;
-    let result: number[][] = [];
-    const size = 128 * 128;
-    let classNumbers = new Set<number>();
-    for (let idx = 0; idx < size; idx++) {
-      let maxIdx = 0;
-      let maxValue = -1000;
-      for (let i = 0; i < modelClasses.length; i++) {
-        if (tensor.data[idx + i * size] > maxValue) {
-          maxValue = tensor.data[idx + i * size];
-          maxIdx = i;
-        }
-      }
-      classNumbers.add(maxIdx);
-      result.push(modelClasses[maxIdx].color);
-    }
-    setFoundClassIdx({ indices: classNumbers });
-    return result;
+    setStatus({ processing: false });
   };
 
   return (
     <>
-      <SelectModel models={props.models} callback={() => {}} />
+      <div className="row">
+        <div className="col l10 s12">
+          <form action="#">
+            <div className="input-field">
+              <select
+                ref={modelSelectRef}
+                className="browser-default"
+                id="modelSelect"
+                disabled={status.processing}
+              >
+                <option value="" disabled selected>
+                  Select the model
+                </option>
+                {props.models.map((e, key) => {
+                  return <option key={key}>{e.title}</option>;
+                })}
+              </select>
+            </div>
+          </form>
+        </div>
+        <div className="col l2 s12">
+          <div className="input-field">
+            <button
+              className="btn waves-effect waves-light"
+              style={{ width: "100%" }}
+              onClick={loadModel}
+              disabled={status.processing}
+            >
+              Load
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="row">
+        <div className="progress">
+          <div
+            className={status.processing ? "indeterminate" : "determinate"}
+          ></div>
+        </div>
+      </div>
       <div className="row">
         <div className="col l6 m6 s12">
           <div
@@ -285,14 +208,6 @@ const SegmentationComponent = (props: SegmentationProps) => {
           </div>
           <h6 className="center-align">Selected class: {className.value}</h6>
           <div className="divider"></div>
-          <div>
-            {sessionInfo !== null && (
-              <ColorSchema
-                classes={sessionInfo.meta.classes}
-                foundIndices={foundClassIdx.indices}
-              />
-            )}
-          </div>
         </div>
         <div className="col l6 m6 s12">
           <form action="#" onSubmit={(e) => e.preventDefault()}>
@@ -321,32 +236,17 @@ const SegmentationComponent = (props: SegmentationProps) => {
               </div>
             </div>
           </form>
-          <div className="progress">
-            <div
-              className={status.processing ? "indeterminate" : "determinate"}
-            ></div>
-          </div>
-          <div className="row">
-            <button
-              className="btn col offset-l3 l6 offset-m3 m6 s12 waves-effect waves-light"
-              disabled={
-                imageData.data === null ||
-                sessionInfo === null ||
-                status.processing
-              }
-              onClick={processImage}
-            >
-              Generate segments
-            </button>
-          </div>
           <div className="divider"></div>
           <div>
-            {sessionInfo !== null && (
-              <ExampleImages
-                imageURLs={sessionInfo.meta.examples}
-                setImageFunc={loadImage}
-              />
-            )}
+            {model !== null &&
+              model.instance !== null &&
+              model.instance.metadata.examples &&
+              model.instance.metadata.examples.length > 0 && (
+                <ExampleImages
+                  imageURLs={model.instance.metadata.examples}
+                  setImageFunc={loadImage}
+                />
+              )}
           </div>
         </div>
       </div>
