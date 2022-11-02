@@ -5,6 +5,7 @@ class PreprocessorConfig {
   centerCrop: boolean;
   cropSize: number;
   flipChannels: boolean;
+  squareImage: boolean;
 
   constructor() {
     this.normalize = {
@@ -15,6 +16,7 @@ class PreprocessorConfig {
     this.centerCrop = false;
     this.cropSize = 0;
     this.flipChannels = false;
+    this.squareImage = false;
   }
 
   static fromFile = async (configPath: string): Promise<PreprocessorConfig> => {
@@ -51,6 +53,9 @@ class PreprocessorConfig {
     }
     if ("do_flip_channels" in configData) {
       res.flipChannels = configData["do_flip_channels"];
+    }
+    if ("do_square" in configData) {
+      res.squareImage = configData["do_square"];
     }
     return res;
   };

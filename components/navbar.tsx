@@ -16,6 +16,9 @@ export default function Navbar() {
             <li>
               <a href="/models/segment">Images segmentation</a>
             </li>
+            <li>
+              <a href="/models/classification">Images classification</a>
+            </li>
           </ul>
         </div>
       </nav>

@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import segmentPic from "../public/index/segment.png";
+import classificationPic from "../public/classification/image-5.jpg";
 import bowtiePic from "../public/index/bowtie.png";
 import grammarPic from "../public/index/grammar.png";
 
@@ -167,6 +168,23 @@ const Home: NextPage = () => {
               </div>
               <div className="card-action">
                 <a href="models/segment">Open demo</a>
+              </div>
+            </div>
+          </div>
+          <div className="col l4 m6 s12">
+            <div className="card">
+              <div className="card-image">
+                <a href="models/classification">
+                  <Image src={classificationPic} />
+                </a>
+              </div>
+              <div className="card-content">
+                <h6>
+                  <b>Images classification</b>
+                </h6>
+              </div>
+              <div className="card-action">
+                <a href="models/classification">Open demo</a>
               </div>
             </div>
           </div>

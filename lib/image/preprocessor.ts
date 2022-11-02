@@ -11,7 +11,19 @@ class Preprocessor {
 
   process = (image: Jimp): ort.Tensor => {
     if (this.config.resize) {
-      image = image.resize(this.config.size, this.config.size);
+      if (this.config.squareImage) {
+        if (image.bitmap.width > image.bitmap.height) {
+          image = image.resize(-1, this.config.size, "bilinearInterpolation");
+        } else {
+          image = image.resize(this.config.size, -1, "bilinearInterpolation");
+        }
+      } else {
+        image = image.resize(
+          this.config.size,
+          this.config.size,
+          "bilinearInterpolation"
+        );
+      }
     }
     if (this.config.centerCrop) {
       const startX = (image.bitmap.width - this.config.cropSize) / 2;
