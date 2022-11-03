@@ -6,7 +6,6 @@ import { Metadata } from "../../lib/image/metadata";
 import {
   ClassificationModel,
   ClassificationPrediction,
-  ClassificationResult,
 } from "../../lib/image/classification";
 
 interface ClassificationProps {
@@ -108,6 +107,11 @@ const ClassificationComponent = (props: ClassificationProps) => {
     ctx!.putImageData(imageData, 0, 0);
     imageRef.current.src = c.toDataURL("image/png");
     const result = await model.instance.process(src);
+    datadogLogs.logger.info("Inference finished.", {
+      elapsed_seconds: result.elapsed,
+      model: model.instance.metadata.title,
+    });
+    console.log(`Inference finished in ${result.elapsed} seconds.`);
     setPredictions({ results: result.results });
     setStatus({ processing: false });
   };

@@ -126,6 +126,11 @@ const SegmentationComponent = (props: SegmentationProps) => {
     imageRef.current.src = c.toDataURL("image/png");
     clearCanvas();
     const result = await model.instance.process(src);
+    datadogLogs.logger.info("Inference finished.", {
+      elapsed_seconds: result.elapsed,
+      model: model.instance.metadata.title,
+    });
+    console.log(`Inference finished in ${result.elapsed} seconds.`);
     const canvas = canvasRef.current;
     var destCtx = canvas!.getContext("2d");
     destCtx.globalAlpha = 0.4;
