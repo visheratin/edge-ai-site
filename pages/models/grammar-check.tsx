@@ -1,11 +1,11 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import GrammarCheckComponent from "../../components/grammar/grammar";
-import { ORTSessionProvider } from "../../components/sessionContext";
+import { models } from "../../components/grammar/models";
 
 const GrammarCheck: NextPage = () => {
   return (
-    <ORTSessionProvider>
+    <>
       <Head>
         <title>Standalone grammar correction - Edge AI</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -65,10 +65,10 @@ const GrammarCheck: NextPage = () => {
           </div>
         </div>
         <div className="row">
-          <GrammarCheckComponent />
+          <GrammarCheckComponent models={models} />
         </div>
       </div>
-    </ORTSessionProvider>
+    </>
   );
 };
 

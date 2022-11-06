@@ -2,11 +2,10 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import ClassificationComponent from "../../components/classification/classification";
 import { models } from "../../components/classification/models";
-import { ORTSessionProvider } from "../../components/sessionContext";
 
 const SEMSegmentation: NextPage = () => {
   return (
-    <ORTSessionProvider>
+    <>
       <Head>
         <title>Images classification - In-browser AI</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -69,7 +68,7 @@ const SEMSegmentation: NextPage = () => {
           <ClassificationComponent models={models} />
         </div>
       </div>
-    </ORTSessionProvider>
+    </>
   );
 };
 

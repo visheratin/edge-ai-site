@@ -1,9 +1,9 @@
-import { Metadata } from "./metadata";
+import { Metadata } from "../../lib/text/metadata";
 
-export const grammarModels: Metadata[] = [
+export const models: Metadata[] = [
   {
     title: "T5 Efficient TINY quantized (32 MB)",
-    models: new Map<string, string>([
+    modelPaths: new Map<string, string>([
       [
         "encoder",
         "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/tiny-encoder-quant.onnx",
@@ -13,13 +13,12 @@ export const grammarModels: Metadata[] = [
         "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/tiny-decoder-init-quant.onnx",
       ],
     ]),
-    tokenizer:
+    tokenizerPath:
       "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/tokenizer.json",
-    examples: [],
   },
   {
     title: "T5 Efficient MINI quantized (55 MB)",
-    models: new Map<string, string>([
+    modelPaths: new Map<string, string>([
       [
         "encoder",
         "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/mini-encoder-quant.onnx",
@@ -29,13 +28,12 @@ export const grammarModels: Metadata[] = [
         "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/mini-decoder-init-quant.onnx",
       ],
     ]),
-    tokenizer:
+    tokenizerPath:
       "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/tokenizer.json",
-    examples: [],
   },
   {
     title: "T5 Efficient TINY (122 MB)",
-    models: new Map<string, string>([
+    modelPaths: new Map<string, string>([
       [
         "encoder",
         "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/tiny-encoder.onnx",
@@ -45,13 +43,12 @@ export const grammarModels: Metadata[] = [
         "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/tiny-decoder-init.onnx",
       ],
     ]),
-    tokenizer:
+    tokenizerPath:
       "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/tokenizer.json",
-    examples: [],
   },
   {
     title: "T5 Efficient MINI (214 MB)",
-    models: new Map<string, string>([
+    modelPaths: new Map<string, string>([
       [
         "encoder",
         "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/mini-encoder.onnx",
@@ -61,8 +58,7 @@ export const grammarModels: Metadata[] = [
         "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/mini-decoder-init.onnx",
       ],
     ]),
-    tokenizer:
+    tokenizerPath:
       "https://edge-ai-models.s3.us-east-2.amazonaws.com/grammar/tokenizer.json",
-    examples: [],
   },
 ];

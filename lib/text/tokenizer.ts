@@ -25,8 +25,6 @@
  * SOFTWARE.
  */
 
-"use strict";
-
 class Tokenizer {
   constructor(
     vocab,
@@ -69,15 +67,19 @@ class Tokenizer {
       decoder
     );
   }
+
   getTokenId(normalizedToken) {
     return this.tokenToIds.get(normalizedToken);
   }
+
   normalize(text) {
     return this.normalizer.normalize(text);
   }
+
   preTokenize(normalized) {
     return this.preTokenizer.preTokenize(normalized);
   }
+
   populateNodes(lattice) {
     const sentence = lattice.sentence;
     const len = sentence.length;
@@ -104,6 +106,7 @@ class Tokenizer {
       beginPos += mblen;
     }
   }
+
   tokenize(normalized) {
     const lattice = new TokenLattice(
       normalized,
@@ -114,6 +117,7 @@ class Tokenizer {
     const tokenIds = lattice.tokenIds();
     return tokenIds;
   }
+
   encode(text) {
     if (text === null || text === undefined || text.length === 0)
       return [this.eosTokenId];
@@ -127,6 +131,7 @@ class Tokenizer {
     tokens.push(this.eosTokenId);
     return tokens;
   }
+
   decode(tokenIds, skipSpecialTokens) {
     const tokens = tokenIds.map((x) => {
       if (this.specialTokenIds.get(x) !== undefined && skipSpecialTokens) {
@@ -177,6 +182,7 @@ class CharTrie {
     }
   }
 }
+
 class CharTrieNode {
   constructor(isLeaf, children) {
     this.isLeaf = isLeaf;
@@ -207,6 +213,7 @@ class TokenLattice {
     this.beginNodes[this.len].push(eos);
     this.endNodes[0].push(bos);
   }
+
   insert(pos, length, score, tokenId) {
     const nodeId = this.nodes.length;
     const node = new TokenLatticeNode(tokenId, nodeId, pos, length, score);
@@ -214,6 +221,7 @@ class TokenLattice {
     this.endNodes[pos + length].push(node);
     this.nodes.push(node);
   }
+
   viterbi() {
     const len = this.len;
     let pos = 0;
@@ -256,18 +264,22 @@ class TokenLattice {
     results.reverse();
     return results;
   }
+
   piece(node) {
     return this.sentence.slice(node.pos, node.pos + node.length);
   }
+
   tokens() {
     const nodes = this.viterbi();
     return nodes.map((x) => this.piece(x));
   }
+
   tokenIds() {
     const nodes = this.viterbi();
     return nodes.map((x) => x.tokenId);
   }
 }
+
 class TokenLatticeNode {
   constructor(tokenId, nodeId, pos, length, score) {
     this.tokenId = tokenId;
@@ -278,6 +290,7 @@ class TokenLatticeNode {
     this.prev = null;
     this.backtraceScore = 0.0;
   }
+
   clone() {
     const n = new TokenLatticeNode(
       this.tokenId,
@@ -314,6 +327,7 @@ class TokenProcessor {
     }
   }
 }
+
 class MetaspaceTokenProcessor extends TokenProcessor {
   constructor(add_prefix_space, replacement, str_rep) {
     super();
@@ -321,6 +335,7 @@ class MetaspaceTokenProcessor extends TokenProcessor {
     this.replacement = replacement;
     this.strRep = str_rep || this.replacement;
   }
+
   preTokenize(normalizedTokens) {
     const result = [];
     for (let token of normalizedTokens) {
@@ -332,6 +347,7 @@ class MetaspaceTokenProcessor extends TokenProcessor {
     }
     return result;
   }
+
   decodeChain(tokens) {
     const result = [];
     let i = 0;
@@ -346,20 +362,24 @@ class MetaspaceTokenProcessor extends TokenProcessor {
     return result;
   }
 }
+
 class PrecompiledTokenProcessor extends TokenProcessor {
   constructor(charsmap) {
     super();
     this.charsmap = charsmap;
   }
+
   normalize(text) {
     return text;
   }
 }
+
 class SequenceTokenProcessor extends TokenProcessor {
   constructor(tokenizers) {
     super();
     this.tokenizers = tokenizers;
   }
+
   preTokenize(normalizedTokens) {
     let result = normalizedTokens;
     for (let tokenizer of this.tokenizers) {
@@ -368,6 +388,7 @@ class SequenceTokenProcessor extends TokenProcessor {
     return result;
   }
 }
+
 class WhitespaceSplitTokenProcessor extends TokenProcessor {
   preTokenize(normalizedTokens) {
     const result = [];
@@ -376,10 +397,4 @@ class WhitespaceSplitTokenProcessor extends TokenProcessor {
     }
     return result;
   }
-}
-
-async function loadTokenizer(url) {
-  const response = await fetch(url);
-  const jtokenizer = await response.json();
-  return Tokenizer.fromConfig(jtokenizer);
 }

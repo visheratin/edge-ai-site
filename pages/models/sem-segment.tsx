@@ -1,12 +1,11 @@
 import type { NextPage } from "next";
 import SegmentationComponent from "../../components/segmentation/segmentation";
-import { ORTSessionProvider } from "../../components/sessionContext";
 import Head from "next/head";
 import { semSegmentationModels } from "../../components/segmentation/models";
 
 const SEMSegmentation: NextPage = () => {
   return (
-    <ORTSessionProvider>
+    <>
       <Head>
         <title>Microscopy images segmentation - Edge AI</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -77,7 +76,7 @@ const SEMSegmentation: NextPage = () => {
           <SegmentationComponent models={semSegmentationModels} />
         </div>
       </div>
-    </ORTSessionProvider>
+    </>
   );
 };
 
