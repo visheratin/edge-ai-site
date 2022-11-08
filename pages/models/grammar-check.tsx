@@ -7,7 +7,7 @@ const GrammarCheck: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Standalone grammar correction - Edge AI</title>
+        <title>Standalone grammar correction - In-browser AI</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div className="container">

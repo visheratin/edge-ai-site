@@ -1,7 +1,13 @@
 import { useRef, useState } from "react";
 import { datadogLogs } from "@datadog/browser-logs";
-import { SentenceMetrics, Seq2SeqModel } from "../../lib/text/model";
+import { Seq2SeqModel } from "../../lib/text/model";
 import { Metadata } from "../../lib/text/metadata";
+import { split } from "sentence-splitter";
+
+interface SentencePart {
+  type: string;
+  value: string;
+}
 
 const Diff = require("diff");
 
@@ -48,14 +54,56 @@ const GrammarCheckComponent = (props: GrammarProps) => {
     setInputTimeout({ value: timeout });
   };
 
+  const splitText = (text: string): Array<SentencePart> => {
+    let parts = split(text);
+    let result: Array<SentencePart> = new Array<SentencePart>();
+    for (let part of parts) {
+      if (part.type === "Sentence") {
+        for (let childNode of part.children) {
+          result.push({ type: childNode.type, value: childNode.value });
+        }
+      } else {
+        result.push({ type: part.type, value: part.value });
+      }
+    }
+    return result;
+  };
+
   const processInput = async () => {
     const value = inputRef.current?.value;
     if (value === "" || value === undefined) {
       return;
     }
-    const result = await model.instance.process(value);
-    setOutput({ value: result.result });
-    const diff = Diff.diffChars(value, result.result);
+    setStatus({ processing: true });
+    let textParts = splitText(value);
+    let output = "";
+    for (let part of textParts) {
+      if (part.type === "Str") {
+        if (part.value.length < 2) {
+          output = output.concat(part.value);
+        } else {
+          const partOutput = await model.instance.process(value);
+          output = output.concat(partOutput.text);
+          if (!partOutput.cached) {
+            datadogLogs.logger.info("Sentence was processed.", {
+              input_length: part.value.length,
+              elapsed_seconds: partOutput.elapsed,
+              model: model.instance.metadata.title,
+              tokens_length: partOutput.tokensNum,
+            });
+            console.log(
+              `Sentence of length ${part.value.length}(${partOutput.tokensNum} tokens) was processed in ${partOutput.elapsed} seconds`
+            );
+          }
+        }
+      } else {
+        if (!output.endsWith(part.value)) {
+          output = output.concat(part.value);
+        }
+      }
+    }
+    setOutput({ value: output });
+    const diff = Diff.diffChars(value, output);
     let diffValue = "";
     diff.forEach((part) => {
       if (part.added) {
@@ -68,17 +116,6 @@ const GrammarCheckComponent = (props: GrammarProps) => {
     });
     setDiff({ value: diffValue });
     setStatus({ processing: false });
-    result.metrics.forEach((metric: SentenceMetrics) => {
-      datadogLogs.logger.info("Sentence was processed.", {
-        input_length: metric.length,
-        elapsed_seconds: metric.elapsed,
-        model: model.instance.metadata.title,
-        tokens_length: metric.tokensNum,
-      });
-      console.log(
-        `Sentence of length ${metric.length}(${metric.tokensNum} tokens) was processed in ${metric.elapsed} seconds`
-      );
-    });
   };
 
   return (
