@@ -6,6 +6,7 @@ import Jimp from "jimp";
 import { Tensor } from "../tensor";
 import Preprocessor from "./preprocessor";
 import PreprocessorConfig from "./preprocessorConfig";
+import { softmax } from "./utils";
 
 export type ClassificationPrediction = {
   class: string;
@@ -84,18 +85,3 @@ export class ClassificationModel {
     return new Tensor(output);
   };
 }
-
-const softmax = (arr: number[]) => {
-  return arr.map((value, index) => {
-    return (
-      Math.exp(value) /
-      arr
-        .map((y) => {
-          return Math.exp(y);
-        })
-        .reduce((a, b) => {
-          return a + b;
-        })
-    );
-  });
-};
