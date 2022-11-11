@@ -5,6 +5,8 @@ import segmentPic from "../public/index/segment.png";
 import classificationPic from "../public/classification/image-5.jpg";
 import bowtiePic from "../public/index/bowtie.png";
 import grammarPic from "../public/index/grammar.png";
+import ImageDemos from "./demos/image/imageDemos";
+import TextDemos from "./demos/text/textDemos";
 
 const Home: NextPage = () => {
   return (
@@ -116,79 +118,21 @@ const Home: NextPage = () => {
         </div>
         <div className="row">
           <div className="col l12">
-            <h5>Demos</h5>
+            <h4>Demos</h4>
           </div>
         </div>
         <div className="row">
-          <div className="col l4 m6 s12">
-            <div className="card">
-              <div className="card-image">
-                <a href="models/sem-segment">
-                  <Image src={bowtiePic} />
-                </a>
-              </div>
-              <div className="card-content">
-                <h6>
-                  <b>Microscope images segmentation</b>
-                </h6>
-              </div>
-              <div className="card-action">
-                <a href="models/sem-segment">Open demo</a>
-              </div>
-            </div>
-          </div>
-          <div className="col l4 m6 s12">
-            <div className="card">
-              <div className="card-image">
-                <a href="models/grammar-check">
-                  <Image src={grammarPic} />
-                </a>
-              </div>
-              <div className="card-content">
-                <h6>
-                  <b>Standalone grammar correction</b>
-                </h6>
-              </div>
-              <div className="card-action">
-                <a href="models/grammar-check">Open demo</a>
-              </div>
-            </div>
-          </div>
-          <div className="col l4 m6 s12">
-            <div className="card">
-              <div className="card-image">
-                <a href="models/segment">
-                  <Image src={segmentPic} />
-                </a>
-              </div>
-              <div className="card-content">
-                <h6>
-                  <b>Semantic images segmentation</b>
-                </h6>
-              </div>
-              <div className="card-action">
-                <a href="models/segment">Open demo</a>
-              </div>
-            </div>
-          </div>
-          <div className="col l4 m6 s12">
-            <div className="card">
-              <div className="card-image">
-                <a href="models/classification">
-                  <Image src={classificationPic} />
-                </a>
-              </div>
-              <div className="card-content">
-                <h6>
-                  <b>Images classification</b>
-                </h6>
-              </div>
-              <div className="card-action">
-                <a href="models/classification">Open demo</a>
-              </div>
-            </div>
+          <div className="col l12">
+            <h5>Image processing</h5>
           </div>
         </div>
+        <ImageDemos />
+        <div className="row">
+          <div className="col l12">
+            <h5>Text processing</h5>
+          </div>
+        </div>
+        <TextDemos />
       </div>
     </>
   );

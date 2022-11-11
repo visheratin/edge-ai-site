@@ -1,18 +1,18 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import ObjectDetectionComponent from "../../components/objectDetection/objectDetection";
-import { models } from "../../components/objectDetection/models";
+import ClassificationComponent from "../../../components/classification/classification";
+import { models } from "../../../components/classification/models";
 
 const SEMSegmentation: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Object detection - In-browser AI</title>
+        <title>Images classification - In-browser AI</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div className="container">
         <div className="row">
-          <h2 className="header">Object detection</h2>
+          <h2 className="header">Images classification</h2>
           <div className="col s12">
             {/* <h6>About the demo</h6>
             <p>
@@ -65,7 +65,7 @@ const SEMSegmentation: NextPage = () => {
           </div>
         </div>
         <div className="row">
-          <ObjectDetectionComponent models={models} />
+          <ClassificationComponent models={models} />
         </div>
       </div>
     </>

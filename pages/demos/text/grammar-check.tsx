@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import GrammarCheckComponent from "../../components/grammar/grammar";
-import { models } from "../../components/grammar/models";
+import GrammarCheckComponent from "../../../components/grammar/grammar";
+import { models } from "../../../components/grammar/models";
 
 const GrammarCheck: NextPage = () => {
   return (

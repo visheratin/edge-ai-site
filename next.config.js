@@ -12,26 +12,6 @@ module.exports = {
 
     config.plugins.push(
       new NodePolyfillPlugin(),
-      new CopyPlugin({
-        patterns: [
-          {
-            from: './node_modules/onnxruntime-web/dist/ort-wasm.wasm',
-            to: 'static/chunks/pages/models',
-          },
-          {
-            from: './node_modules/onnxruntime-web/dist/ort-wasm-simd.wasm',
-            to: 'static/chunks/pages/models',
-          },
-          {
-            from: './node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.wasm',
-            to: 'static/chunks/pages/models',
-          },
-          {
-            from: './node_modules/onnxruntime-web/dist/ort-wasm-threaded.wasm',
-            to: 'static/chunks/pages/models',
-          },
-        ],
-      }),
     );
 
     return config;
