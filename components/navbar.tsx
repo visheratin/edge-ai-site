@@ -6,14 +6,14 @@ export default function Navbar() {
           <a href="/" id="logo-container" className="brand-logo">
             In-browser AI
           </a>
-          <ul className="right hide-on-med-and-down">
+          {/* <ul className="right hide-on-med-and-down">
             <li>
               <a href="/demos/image">Image processing demos</a>
             </li>
             <li>
               <a href="/demos/text">Text processing demos</a>
             </li>
-          </ul>
+          </ul> */}
         </div>
       </nav>
     </>

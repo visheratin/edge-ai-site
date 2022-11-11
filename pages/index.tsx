@@ -1,12 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
-import segmentPic from "../public/index/segment.png";
-import classificationPic from "../public/classification/image-5.jpg";
-import bowtiePic from "../public/index/bowtie.png";
-import grammarPic from "../public/index/grammar.png";
-import ImageDemos from "./demos/image/imageDemos";
-import TextDemos from "./demos/text/textDemos";
+import ImageDemos from "./demos/imageDemos";
+import TextDemos from "./demos/textDemos";
 
 const Home: NextPage = () => {
   return (
