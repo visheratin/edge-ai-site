@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import ObjectDetectionComponent from "../../../components/objectDetection/objectDetection";
-import { models } from "../../../components/objectDetection/models";
+import ObjectDetectionComponent from "../../components/objectDetection/objectDetection";
+import { models } from "../../components/objectDetection/models";
 
 const SEMSegmentation: NextPage = () => {
   return (
