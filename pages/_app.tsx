@@ -3,6 +3,7 @@ import Layout from "../components/layout";
 import "@datadog/browser-logs/bundle/datadog-logs";
 import { useEffect } from "react";
 import Head from "next/head";
+import { init } from "../lib/session";
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -13,6 +14,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       silentMultipleInit: true,
       sampleRate: 100,
     });
+
+    init(document.location.origin + "/onnx/");
   });
 
   return (
