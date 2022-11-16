@@ -3,6 +3,8 @@ import * as ort from "onnxruntime-web";
 ort.env.wasm.numThreads = 3;
 ort.env.wasm.simd = true;
 ort.env.wasm.proxy = true;
+ort.env.wasm.wasmPaths =
+  "https://edge-ai-models.s3.us-east-2.amazonaws.com/onnx/";
 
 export const init = (wasmPath: string) => {
   ort.env.wasm.wasmPaths = wasmPath;
@@ -16,6 +18,8 @@ export const createSession = async (
     executionProviders: ["wasm"],
     graphOptimizationLevel: "all",
     executionMode: "parallel",
+    logSeverityLevel: 0,
+    logVerbosityLevel: 99,
   });
   return session;
 };
