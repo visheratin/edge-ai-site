@@ -31,6 +31,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
     const model = new SegmentationModel(metadata, null);
     const elapsed = await model.init();
     datadogLogs.logger.info("Model was created.", {
+      demo: "segmentation",
       modelPath: metadata.modelPath,
       elapsed_seconds: elapsed,
     });
@@ -127,6 +128,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
     clearCanvas();
     const result = await model.instance.process(src);
     datadogLogs.logger.info("Inference finished.", {
+      demo: "segmentation",
       elapsed_seconds: result.elapsed,
       model: model.instance.metadata.title,
     });

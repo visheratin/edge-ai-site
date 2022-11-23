@@ -60,6 +60,7 @@ const ClassificationComponent = (props: ClassificationProps) => {
     const model = new ClassificationModel(metadata, null);
     const elapsed = await model.init();
     datadogLogs.logger.info("Model was created.", {
+      demo: "classification",
       modelPath: metadata.modelPath,
       elapsed_seconds: elapsed,
     });
@@ -108,6 +109,7 @@ const ClassificationComponent = (props: ClassificationProps) => {
     imageRef.current.src = c.toDataURL("image/png");
     const result = await model.instance.process(src);
     datadogLogs.logger.info("Inference finished.", {
+      demo: "classification",
       elapsed_seconds: result.elapsed,
       model: model.instance.metadata.title,
     });

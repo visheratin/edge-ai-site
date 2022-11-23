@@ -38,6 +38,7 @@ const GrammarCheckComponent = (props: GrammarProps) => {
     const model = new Seq2SeqModel(metadata);
     const elapsed = await model.init();
     datadogLogs.logger.info("Model was created.", {
+      demo: "grammar_check",
       modelPath: metadata.modelPath,
       elapsed_seconds: elapsed,
     });
@@ -86,6 +87,7 @@ const GrammarCheckComponent = (props: GrammarProps) => {
           output = output.concat(partOutput.text);
           if (!partOutput.cached) {
             datadogLogs.logger.info("Sentence was processed.", {
+              demo: "grammar_check",
               input_length: part.value.length,
               elapsed_seconds: partOutput.elapsed,
               model: model.instance.metadata.title,

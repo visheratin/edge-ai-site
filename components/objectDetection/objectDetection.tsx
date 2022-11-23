@@ -65,6 +65,7 @@ const ObjectDetectionComponent = (props: ObjectDetectionProps) => {
     const model = new ObjectDetectionModel(metadata, null);
     const elapsed = await model.init();
     datadogLogs.logger.info("Model was created.", {
+      demo: "object_detection",
       modelPath: metadata.modelPath,
       elapsed_seconds: elapsed,
     });
@@ -118,6 +119,7 @@ const ObjectDetectionComponent = (props: ObjectDetectionProps) => {
     imageRef.current.src = c.toDataURL("image/png");
     const result = await model.instance.process(src, 0.9);
     datadogLogs.logger.info("Inference finished.", {
+      demo: "object_detection",
       elapsed_seconds: result.elapsed,
       model: model.instance.metadata.title,
     });
