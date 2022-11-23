@@ -7,7 +7,7 @@ import Head from "next/head";
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     window.DD_LOGS.init({
-      clientToken: "pub1df46ecb733718bfa44a66ec0e6a5723",
+      clientToken: "pubbcec946de66758406c3148a041c25dde",
       site: "datadoghq.com",
       forwardErrorsToLogs: true,
       silentMultipleInit: true,
