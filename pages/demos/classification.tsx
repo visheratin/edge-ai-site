@@ -1,9 +1,10 @@
+import { ImageModelType, ListImageModels } from "in-browser-ai";
 import type { NextPage } from "next";
 import Head from "next/head";
 import ClassificationComponent from "../../components/classification/classification";
-import { models } from "../../components/classification/models";
 
 const SEMSegmentation: NextPage = () => {
+  const models = ListImageModels(undefined, ImageModelType.Classification);
   return (
     <>
       <Head>

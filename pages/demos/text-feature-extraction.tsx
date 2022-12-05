@@ -1,10 +1,10 @@
 import { ListTextModels, TextModelType } from "in-browser-ai";
 import type { NextPage } from "next";
 import Head from "next/head";
-import GrammarCheckComponent from "../../components/grammar/grammar";
+import FeatureExtractionComponent from "../../components/textFeatures/featureExtractor";
 
 const GrammarCheck: NextPage = () => {
-  const models = ListTextModels(["grammar"], TextModelType.Seq2Seq);
+  const models = ListTextModels(undefined, TextModelType.FeatureExtraction);
   return (
     <>
       <Head>
@@ -66,7 +66,7 @@ const GrammarCheck: NextPage = () => {
           </div>
         </div>
         <div className="row">
-          <GrammarCheckComponent models={models} />
+          <FeatureExtractionComponent models={models} />
         </div>
       </div>
     </>

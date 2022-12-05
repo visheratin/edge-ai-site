@@ -1,9 +1,10 @@
+import { ListImageModels, ImageModelType } from "in-browser-ai";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { generalSegmentationModels } from "../../components/segmentation/models";
 import SegmentationComponent from "../../components/segmentation/segmentation";
 
 const SEMSegmentation: NextPage = () => {
+  const models = ListImageModels(undefined, ImageModelType.Segmentation);
   return (
     <>
       <Head>
@@ -68,7 +69,7 @@ const SEMSegmentation: NextPage = () => {
           </div>
         </div>
         <div className="row">
-          <SegmentationComponent models={generalSegmentationModels} />
+          <SegmentationComponent models={models} />
         </div>
       </div>
     </>

@@ -1,15 +1,15 @@
 import Jimp from "jimp";
 import { useLayoutEffect, useRef, useState } from "react";
-import ExampleImages from "./exampleImages";
+import ExampleImages from "../exampleImages";
 import { datadogLogs } from "@datadog/browser-logs";
-import { Metadata } from "../../lib/image/metadata";
 import {
+  ImageMetadata,
   ClassificationModel,
   ClassificationPrediction,
-} from "../../lib/image/classification";
+} from "in-browser-ai";
 
 interface ClassificationProps {
-  models: Metadata[];
+  models: ImageMetadata[];
 }
 
 const ClassificationComponent = (props: ClassificationProps) => {
@@ -52,7 +52,7 @@ const ClassificationComponent = (props: ClassificationProps) => {
 
   const loadModel = async () => {
     setStatus({ processing: true });
-    const selectedIdx = modelSelectRef.current?.selectedIndex;
+    const selectedIdx = modelSelectRef.current?.selectedIndex as number;
     if (selectedIdx === 0) {
       return;
     }
@@ -106,7 +106,7 @@ const ClassificationComponent = (props: ClassificationProps) => {
     c.height = imageBuffer.bitmap.height;
     const ctx = c.getContext("2d");
     ctx!.putImageData(imageData, 0, 0);
-    imageRef.current.src = c.toDataURL("image/png");
+    imageRef.current!.src = c.toDataURL("image/png");
     const result = await model.instance.process(src);
     datadogLogs.logger.info("Inference finished.", {
       demo: "classification",

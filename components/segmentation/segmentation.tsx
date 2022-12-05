@@ -1,12 +1,11 @@
 import Jimp from "jimp";
 import { useLayoutEffect, useRef, useState } from "react";
-import ExampleImages from "./exampleImages";
+import ExampleImages from "../exampleImages";
 import { datadogLogs } from "@datadog/browser-logs";
-import { SegmentationModel } from "../../lib/image/segmentation";
-import { Metadata } from "../../lib/image/metadata";
+import { ImageMetadata, SegmentationModel } from "in-browser-ai";
 
 interface SegmentationProps {
-  models: Metadata[];
+  models: ImageMetadata[];
 }
 
 const SegmentationComponent = (props: SegmentationProps) => {
@@ -23,7 +22,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
 
   const loadModel = async () => {
     setStatus({ processing: true });
-    const selectedIdx = modelSelectRef.current?.selectedIndex;
+    const selectedIdx = modelSelectRef.current?.selectedIndex as number;
     if (selectedIdx === 0) {
       return;
     }
@@ -124,7 +123,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
     c.height = imageBuffer.bitmap.height;
     const ctx = c.getContext("2d");
     ctx!.putImageData(imageData, 0, 0);
-    imageRef.current.src = c.toDataURL("image/png");
+    imageRef.current!.src = c.toDataURL("image/png");
     clearCanvas();
     const result = await model.instance.process(src);
     datadogLogs.logger.info("Inference finished.", {
@@ -135,7 +134,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
     console.log(`Inference finished in ${result.elapsed} seconds.`);
     const canvas = canvasRef.current;
     var destCtx = canvas!.getContext("2d");
-    destCtx.globalAlpha = 0.4;
+    destCtx!.globalAlpha = 0.4;
     destCtx!.drawImage(
       result.data,
       0,

@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 import { datadogLogs } from "@datadog/browser-logs";
-import { Seq2SeqModel } from "../../lib/text/model";
-import { Metadata } from "../../lib/text/metadata";
+import { Seq2SeqModel, TextMetadata } from "in-browser-ai";
 import { split } from "sentence-splitter";
 
 interface SentencePart {
@@ -12,7 +11,7 @@ interface SentencePart {
 const Diff = require("diff");
 
 interface GrammarProps {
-  models: Metadata[];
+  models: TextMetadata[];
 }
 
 const GrammarCheckComponent = (props: GrammarProps) => {
@@ -25,12 +24,12 @@ const GrammarCheckComponent = (props: GrammarProps) => {
   const modelSelectRef = useRef<HTMLSelectElement>(null); // reference for the model selector element
 
   const [model, setModel] = useState({
-    instance: new Seq2SeqModel({}),
+    instance: new Seq2SeqModel(props.models[0]),
   });
 
   const loadModel = async () => {
     setStatus({ processing: true });
-    const selectedIdx = modelSelectRef.current?.selectedIndex;
+    const selectedIdx = modelSelectRef.current?.selectedIndex as number;
     if (selectedIdx === 0) {
       return;
     }
@@ -39,7 +38,7 @@ const GrammarCheckComponent = (props: GrammarProps) => {
     const elapsed = await model.init();
     datadogLogs.logger.info("Model was created.", {
       demo: "grammar_check",
-      modelPath: metadata.modelPath,
+      modelPaths: metadata.modelPaths,
       elapsed_seconds: elapsed,
     });
     setModel({ instance: model });

@@ -1,15 +1,15 @@
 import Jimp from "jimp";
 import { useLayoutEffect, useRef, useState } from "react";
-import ExampleImages from "./exampleImages";
+import ExampleImages from "../exampleImages";
 import { datadogLogs } from "@datadog/browser-logs";
-import { Metadata } from "../../lib/image/metadata";
 import {
+  ImageMetadata,
   ObjectDetectionModel,
   ObjectDetectionPrediction,
-} from "../../lib/image/objectDetection";
+} from "in-browser-ai";
 
 interface ObjectDetectionProps {
-  models: Metadata[];
+  models: ImageMetadata[];
 }
 
 const ObjectDetectionComponent = (props: ObjectDetectionProps) => {
@@ -57,7 +57,7 @@ const ObjectDetectionComponent = (props: ObjectDetectionProps) => {
 
   const loadModel = async () => {
     setStatus({ processing: true });
-    const selectedIdx = modelSelectRef.current?.selectedIndex;
+    const selectedIdx = modelSelectRef.current?.selectedIndex as number;
     if (selectedIdx === 0) {
       return;
     }
