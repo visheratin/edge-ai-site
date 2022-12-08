@@ -9,7 +9,7 @@ const GrammarCheck: NextPage = () => {
   const [status, setStatus] = useState({ processing: false });
   const [output, setOutput] = useState({ value: "Here will be the output" });
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const [inputTimeout, setInputTimeout] = useState({ value: null });
+  const prefixRef = useRef<HTMLInputElement>(null);
 
   const modelSelectRef = useRef<HTMLSelectElement>(null); // reference for the model selector element
 
@@ -40,8 +40,13 @@ const GrammarCheck: NextPage = () => {
     if (value === "" || value === undefined) {
       return;
     }
+    const op = prefixRef.current?.value;
+    if (op === "" || op === undefined) {
+      return;
+    }
+    const input = `${op}: ${value}`;
     setStatus({ processing: true });
-    let output = await model.instance.process(value);
+    let output = await model.instance.process(input);
     setOutput({ value: output.text });
     setStatus({ processing: false });
   };
@@ -49,12 +54,12 @@ const GrammarCheck: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Standalone grammar correction - In-browser AI</title>
+        <title>Flan T5 - In-browser AI</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div className="container">
         <div className="row">
-          <h2 className="header">Standalone grammar correction</h2>
+          <h2 className="header">Flan T5</h2>
           <div className="col s12">
             <h6>About the demo</h6>
           </div>
@@ -112,6 +117,18 @@ const GrammarCheck: NextPage = () => {
               }
               placeholder="Start typing here"
             ></textarea>
+          </div>
+          <div className="col l12 s12">
+            <h6>Operation</h6>
+            <input
+              ref={prefixRef}
+              className="materialize-textarea"
+              disabled={
+                !model.instance ||
+                !model.instance.initialized ||
+                status.processing
+              }
+            />
           </div>
           <div className="col l2 s12">
             <div className="input-field">

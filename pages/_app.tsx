@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { AppProps } from "next/app";
 import Layout from "../components/layout";
 import "@datadog/browser-logs/bundle/datadog-logs";

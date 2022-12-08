@@ -52,7 +52,7 @@ const ObjectDetectionComponent = (props: ObjectDetectionProps) => {
   });
 
   const [model, setModel] = useState({
-    instance: new ObjectDetectionModel({}, null),
+    instance: new ObjectDetectionModel(props.models[0]),
   });
 
   const loadModel = async () => {
@@ -62,7 +62,7 @@ const ObjectDetectionComponent = (props: ObjectDetectionProps) => {
       return;
     }
     const metadata = props.models[selectedIdx - 1];
-    const model = new ObjectDetectionModel(metadata, null);
+    const model = new ObjectDetectionModel(metadata);
     const elapsed = await model.init();
     datadogLogs.logger.info("Model was created.", {
       demo: "object_detection",
@@ -117,7 +117,7 @@ const ObjectDetectionComponent = (props: ObjectDetectionProps) => {
     const ctx = c.getContext("2d");
     ctx!.putImageData(imageData, 0, 0);
     imageRef.current.src = c.toDataURL("image/png");
-    const result = await model.instance.process(src, 0.9);
+    const result = await model.instance.process(src);
     datadogLogs.logger.info("Inference finished.", {
       demo: "object_detection",
       elapsed_seconds: result.elapsed,

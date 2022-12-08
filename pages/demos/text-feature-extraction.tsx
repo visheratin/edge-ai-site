@@ -8,17 +8,17 @@ const GrammarCheck: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Standalone grammar correction - In-browser AI</title>
+        <title>Text feature extraction - In-browser AI</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div className="container">
         <div className="row">
-          <h2 className="header">Standalone grammar correction</h2>
+          <h2 className="header">Text feature extraction</h2>
           <div className="col s12">
             <h6>About the demo</h6>
             <p>
-              In this demo you can work with the models for grammatical error
-              correction in English. There are two models available -{" "}
+              In this demo, you can check out the models for features extraction
+              for the text. There are two models available -{" "}
               <a
                 href="https://huggingface.co/google/t5-efficient-mini"
                 target="_blank"
@@ -32,22 +32,8 @@ const GrammarCheck: NextPage = () => {
               >
                 T5-Efficient-TINY
               </a>{" "}
-              (16M parameters). Both models were trained on a portion (due to
-              the time constraints) of the{" "}
-              <a
-                href="https://ai.googleblog.com/2021/08/the-c4200m-synthetic-dataset-for.html"
-                target="_blank"
-              >
-                C4_200M dataset
-              </a>{" "}
-              (37M training samples and 37M validation samples). In addition to
-              the original errors of the dataset, more basic typos were
-              dynamically introduced to the training set with the help of{" "}
-              <a href="https://github.com/makcedward/nlpaug" target="_blank">
-                nlpaug
-              </a>{" "}
-              library. As a result, T5-Efficient-TINY reached validation loss of
-              0.08 and T5-Efficient-MINI achieved validation loss of 0.06.
+              (16M parameters). Both models were trained on a colossal, cleaned
+              version of Common Crawl's web crawl corpus.
             </p>
             <p>
               Both models are available in original and quantinized variants.
@@ -58,11 +44,29 @@ const GrammarCheck: NextPage = () => {
               library. Exported models were quantinized using standard PyTorch
               functionality.
             </p>
-            <h6>How to use the demo:</h6>
             <p>
-              Load the model and start typing. The model will run as soon as you
-              stop typing.
+              What happens under the hood: the model generates embedding vectors
+              for both pieces of text and then calculates the{" "}
+              <a
+                href="https://en.wikipedia.org/wiki/Cosine_similarity"
+                target="_blank"
+              >
+                cosine similarity
+              </a>{" "}
+              between these vectors.
             </p>
+            <h6>How to use the demo:</h6>
+            <ol>
+              <li>Select the model and load it.</li>
+              <li>Type in the first piece of text.</li>
+              <li>Type in the second piece of text.</li>
+              <li>Click "Calculate similarity".</li>
+              <li>
+                The output will contain the score where 1 is when the text
+                pieces are the same and -1 is when the text pieces are
+                completely different.
+              </li>
+            </ol>
           </div>
         </div>
         <div className="row">

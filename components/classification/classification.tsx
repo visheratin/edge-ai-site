@@ -47,7 +47,7 @@ const ClassificationComponent = (props: ClassificationProps) => {
   });
 
   const [model, setModel] = useState({
-    instance: new ClassificationModel({}, null),
+    instance: new ClassificationModel(props.models[0]),
   });
 
   const loadModel = async () => {
@@ -57,7 +57,7 @@ const ClassificationComponent = (props: ClassificationProps) => {
       return;
     }
     const metadata = props.models[selectedIdx - 1];
-    const model = new ClassificationModel(metadata, null);
+    const model = new ClassificationModel(metadata);
     const elapsed = await model.init();
     datadogLogs.logger.info("Model was created.", {
       demo: "classification",

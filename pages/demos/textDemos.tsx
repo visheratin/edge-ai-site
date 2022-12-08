@@ -39,6 +39,23 @@ const TextDemos = () => {
             </div>
           </div>
         </div>
+        <div className="col l4 m6 s12">
+          <div className="card">
+            <div className="card-image">
+              <a href="/demos/flan-t5">
+                <Image src={grammarPic} />
+              </a>
+            </div>
+            <div className="card-content">
+              <h6>
+                <b>Flan T5</b>
+              </h6>
+            </div>
+            <div className="card-action">
+              <a href="/demos/flan-t5">Open demo</a>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

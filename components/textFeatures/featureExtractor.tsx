@@ -15,7 +15,7 @@ const FeatureExtractorComponent = (props: GrammarProps) => {
   const modelSelectRef = useRef<HTMLSelectElement>(null); // reference for the model selector element
 
   const [model, setModel] = useState({
-    instance: new FeatureExtractionModel({}),
+    instance: new FeatureExtractionModel(props.models[0]),
   });
 
   const loadModel = async () => {
@@ -136,7 +136,7 @@ const FeatureExtractorComponent = (props: GrammarProps) => {
       </div>
       <div className="row">
         <div className="col l12 s12">
-          <h6>Sentence 1</h6>
+          <h6>Text 1</h6>
           <textarea
             ref={input1Ref}
             className="materialize-textarea"
@@ -149,7 +149,7 @@ const FeatureExtractorComponent = (props: GrammarProps) => {
           ></textarea>
         </div>
         <div className="col l12 s12">
-          <h6>Sentence 2</h6>
+          <h6>Text 2</h6>
           <textarea
             ref={input2Ref}
             className="materialize-textarea"

@@ -17,7 +17,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
   const modelSelectRef = useRef<HTMLSelectElement>(null); // reference for the model selector element
 
   const [model, setModel] = useState({
-    instance: new SegmentationModel({}, null),
+    instance: new SegmentationModel(props.models[0]),
   });
 
   const loadModel = async () => {
@@ -27,7 +27,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
       return;
     }
     const metadata = props.models[selectedIdx];
-    const model = new SegmentationModel(metadata, null);
+    const model = new SegmentationModel(metadata);
     const elapsed = await model.init();
     datadogLogs.logger.info("Model was created.", {
       demo: "segmentation",
@@ -93,7 +93,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
     ctx!.clearRect(0, 0, canvas!.width, canvas!.height);
   };
 
-  const getClass = (e) => {
+  const getClass = (e: any) => {
     const canvas = canvasRef.current;
     const rect = canvas!.getBoundingClientRect();
     const ctx = canvas!.getContext("2d");

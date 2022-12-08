@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { datadogLogs } from "@datadog/browser-logs";
 import { Seq2SeqModel, TextMetadata } from "in-browser-ai";
 import { split } from "sentence-splitter";
@@ -45,7 +45,7 @@ const GrammarCheckComponent = (props: GrammarProps) => {
     setStatus({ processing: false });
   };
 
-  const inputChanged = async (e: Event) => {
+  const inputChanged = async (e: ChangeEvent<HTMLTextAreaElement>) => {
     e.preventDefault();
     if (inputTimeout.value) {
       clearTimeout(inputTimeout.value);
