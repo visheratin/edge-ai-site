@@ -1,5 +1,4 @@
-import { ImageMetadata } from "in-browser-ai";
-import { ImageModelType } from "in-browser-ai/src/image/modelType";
+import { ImageMetadata, ImageModelType } from "in-browser-ai";
 
 const semSegmentationExamples: string[] = [
   "/sem-segment/image-1.png",
