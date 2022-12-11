@@ -26,7 +26,7 @@ const SegmentationComponent = (props: SegmentationProps) => {
     if (selectedIdx === 0) {
       return;
     }
-    const metadata = props.models[selectedIdx];
+    const metadata = props.models[selectedIdx - 1];
     const model = new SegmentationModel(metadata);
     const elapsed = await model.init();
     datadogLogs.logger.info("Model was created.", {

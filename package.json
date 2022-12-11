@@ -13,7 +13,7 @@
     "@datadog/browser-logs": "^4.20.0",
     "diff": "^5.1.0",
     "fs": "^0.0.1-security",
-    "in-browser-ai": "^0.0.2",
+    "in-browser-ai": "^0.0.3",
     "jimp": "^0.16.1",
     "lodash": "^4.17.21",
     "materialize-css": "^1.0.0-rc.2",

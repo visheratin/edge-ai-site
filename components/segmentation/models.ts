@@ -17,7 +17,7 @@ export const semSegmentationModels: ImageMetadata[] = [
     type: ImageModelType.Segmentation,
     sizeMB: 4,
     modelPath:
-      "https://edge-ai-models.s3.us-east-2.amazonaws.com/sem-segment/b0.onnx",
+      "https://edge-ai-models.s3.us-east-2.amazonaws.com/sem-segment/b0.onnx.gz",
     configPath:
       "https://edge-ai-models.s3.us-east-2.amazonaws.com/sem-segment/config.json",
     preprocessorPath:
@@ -32,7 +32,7 @@ export const semSegmentationModels: ImageMetadata[] = [
     type: ImageModelType.Segmentation,
     sizeMB: 14,
     modelPath:
-      "https://edge-ai-models.s3.us-east-2.amazonaws.com/sem-segment/b1.onnx",
+      "https://edge-ai-models.s3.us-east-2.amazonaws.com/sem-segment/b1.onnx.gz",
     configPath:
       "https://edge-ai-models.s3.us-east-2.amazonaws.com/sem-segment/config.json",
     preprocessorPath:
@@ -47,7 +47,7 @@ export const semSegmentationModels: ImageMetadata[] = [
     type: ImageModelType.Segmentation,
     sizeMB: 85,
     modelPath:
-      "https://edge-ai-models.s3.us-east-2.amazonaws.com/sem-segment/b5.onnx",
+      "https://edge-ai-models.s3.us-east-2.amazonaws.com/sem-segment/b5.onnx.gz",
     configPath:
       "https://edge-ai-models.s3.us-east-2.amazonaws.com/sem-segment/config.json",
     preprocessorPath:
