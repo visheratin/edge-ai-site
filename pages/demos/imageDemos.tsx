@@ -12,7 +12,7 @@ const ImageDemos = () => {
           <div className="card">
             <div className="card-image">
               <a href="/demos/sem-segment">
-                <Image src={bowtiePic} />
+                <Image src={bowtiePic} alt="Picture" />
               </a>
             </div>
             <div className="card-content">
@@ -29,7 +29,7 @@ const ImageDemos = () => {
           <div className="card">
             <div className="card-image">
               <a href="/demos/segment">
-                <Image src={segmentPic} />
+                <Image src={segmentPic} alt="Picture" />
               </a>
             </div>
             <div className="card-content">
@@ -46,7 +46,7 @@ const ImageDemos = () => {
           <div className="card">
             <div className="card-image">
               <a href="/demos/classification">
-                <Image src={classificationPic} />
+                <Image src={classificationPic} alt="Picture" />
               </a>
             </div>
             <div className="card-content">

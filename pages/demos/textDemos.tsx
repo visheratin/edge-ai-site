@@ -9,7 +9,7 @@ const TextDemos = () => {
           <div className="card">
             <div className="card-image">
               <a href="/demos/grammar-check">
-                <Image src={grammarPic} />
+                <Image src={grammarPic} alt="Picture" />
               </a>
             </div>
             <div className="card-content">
@@ -26,7 +26,7 @@ const TextDemos = () => {
           <div className="card">
             <div className="card-image">
               <a href="/demos/text-feature-extraction">
-                <Image src={grammarPic} />
+                <Image src={grammarPic} alt="Picture" />
               </a>
             </div>
             <div className="card-content">
@@ -43,7 +43,7 @@ const TextDemos = () => {
           <div className="card">
             <div className="card-image">
               <a href="/demos/flan-t5">
-                <Image src={grammarPic} />
+                <Image src={grammarPic} alt="Picture" />
               </a>
             </div>
             <div className="card-content">
