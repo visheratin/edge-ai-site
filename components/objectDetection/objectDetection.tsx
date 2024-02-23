@@ -115,6 +115,7 @@ const ObjectDetectionComponent = (props: ObjectDetectionProps) => {
     c.height = imageBuffer.bitmap.height;
     const ctx = c.getContext("2d");
     ctx!.putImageData(imageData, 0, 0);
+    // @ts-ignore
     imageRef.current.src = c.toDataURL("image/png");
     const result = await model.instance.process(src);
     datadogLogs.logger.info("Inference finished.", {

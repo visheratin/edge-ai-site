@@ -51,6 +51,7 @@ const GrammarCheckComponent = (props: GrammarProps) => {
       clearTimeout(inputTimeout.value);
     }
     let timeout = setTimeout(processInput, 750);
+    // @ts-ignore
     setInputTimeout({ value: timeout });
   };
 
@@ -106,6 +107,7 @@ const GrammarCheckComponent = (props: GrammarProps) => {
     setOutput({ value: output });
     const diff = Diff.diffChars(value, output);
     let diffValue = "";
+    // @ts-ignore
     diff.forEach((part) => {
       if (part.added) {
         diffValue += `<span style="color: green; font-weight: bold">${part.value}</span>`;
