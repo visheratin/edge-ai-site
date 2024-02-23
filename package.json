@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@datadog/browser-logs": "^4.20.0",
+    "@visheratin/tokenizers": "^0.1.5",
     "@visheratin/web-ai": "^1.4.5",
     "diff": "^5.1.0",
     "fs": "^0.0.1-security",

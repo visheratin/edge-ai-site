@@ -1,33 +1,39 @@
 /** @type {import('next').NextConfig} */
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
-// const WorkboxPlugin = require('workbox-webpack-plugin');
-// const CopyPlugin = require("copy-webpack-plugin");
-// const WorkerPlugin = require('worker-plugin')
 
-module.exports = {
+const nextConfig = {
   reactStrictMode: true,
-  experimental: {
-    transpilePackages: ['@visheratin/web-ai'],
-  },
+  transpilePackages: ['@visheratin/web-ai'],
   webpack: (config, { }) => {
-
-    config.resolve.extensions.push(".ts", ".tsx");
     config.resolve.fallback = { 
       fs: false,
     };
-
     config.plugins.push(
       new NodePolyfillPlugin(),
     );
-
-    config.module.rules.push({
-      test: /\.ts$/,
-      loader: "ts-loader",
-    });
-
+    config.experiments = {
+      asyncWebAssembly: true,
+    };
     return config;
   },
-  typescript: {
-    ignoreBuildErrors: true,
+  async headers() {
+    return [
+      {
+        // Apply these headers to all routes in your application.
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cross-Origin-Embedder-Policy',
+            value: 'require-corp'
+          },
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'same-origin'
+          }
+        ],
+      },
+    ]
   },
 }
+
+module.exports = nextConfig

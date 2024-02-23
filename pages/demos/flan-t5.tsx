@@ -1,11 +1,11 @@
 import { datadogLogs } from "@datadog/browser-logs";
-import { ListTextModels, Seq2SeqModel, TextModelType } from "in-browser-ai";
+import { ListTextModels, Seq2SeqModel, ModelType } from "@visheratin/web-ai/text";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRef, useState } from "react";
 
 const GrammarCheck: NextPage = () => {
-  const models = ListTextModels(["t5-flan"], TextModelType.Seq2Seq);
+  const models = ListTextModels(["t5-flan"], ModelType.Seq2Seq);
   const [status, setStatus] = useState({ processing: false });
   const [output, setOutput] = useState({ value: "Here will be the output" });
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -47,7 +47,7 @@ const GrammarCheck: NextPage = () => {
     const input = `${op}: ${value}`;
     setStatus({ processing: true });
     let output = await model.instance.process(input);
-    setOutput({ value: output.text });
+    setOutput({ value: output.text[0] });
     setStatus({ processing: false });
   };
 
