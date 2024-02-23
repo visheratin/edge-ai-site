@@ -63,7 +63,7 @@ const ImageDemos = () => {
           <div className="card">
             <div className="card-image">
               <a href="/demos/object-detection">
-                <Image src={detectionPic} />
+                <Image src={detectionPic} alt="Picture" />
               </a>
             </div>
             <div className="card-content">

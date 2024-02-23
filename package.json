@@ -11,10 +11,10 @@
   },
   "dependencies": {
     "@datadog/browser-logs": "^4.20.0",
+    "@visheratin/web-ai": "^1.4.5",
     "diff": "^5.1.0",
     "fs": "^0.0.1-security",
-    "in-browser-ai": "^0.0.6",
-    "jimp": "^0.16.1",
+    "jimp": "^0.16.2",
     "lodash": "^4.17.21",
     "materialize-css": "^1.0.0-rc.2",
     "ndarray": "^1.0.19",

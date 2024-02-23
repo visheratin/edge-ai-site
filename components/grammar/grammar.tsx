@@ -1,6 +1,6 @@
 import { ChangeEvent, useRef, useState } from "react";
 import { datadogLogs } from "@datadog/browser-logs";
-import { Seq2SeqModel, TextMetadata } from "in-browser-ai";
+import { Seq2SeqModel, TextMetadata } from "@visheratin/web-ai/text";
 import { split } from "sentence-splitter";
 
 interface SentencePart {
@@ -83,7 +83,7 @@ const GrammarCheckComponent = (props: GrammarProps) => {
           output = output.concat(part.value);
         } else {
           const partOutput = await model.instance.process(value);
-          output = output.concat(partOutput.text);
+          output = output.concat(partOutput.text[0]);
           if (!partOutput.cached) {
             datadogLogs.logger.info("Sentence was processed.", {
               demo: "grammar_check",

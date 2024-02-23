@@ -1,10 +1,11 @@
-import { ListTextModels, TextModelType } from "in-browser-ai";
+import { ListTextModels, ModelType } from "@visheratin/web-ai/text";
 import type { NextPage } from "next";
 import Head from "next/head";
 import FeatureExtractionComponent from "../../components/textFeatures/featureExtractor";
 
 const GrammarCheck: NextPage = () => {
-  const models = ListTextModels(undefined, TextModelType.FeatureExtraction);
+  const models = ListTextModels(undefined, ModelType.FeatureExtraction);
+  console.log(models);
   return (
     <>
       <Head>

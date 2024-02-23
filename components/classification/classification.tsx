@@ -6,7 +6,7 @@ import {
   ImageMetadata,
   ClassificationModel,
   ClassificationPrediction,
-} from "in-browser-ai";
+} from "@visheratin/web-ai/image";
 
 interface ClassificationProps {
   models: ImageMetadata[];
@@ -61,7 +61,6 @@ const ClassificationComponent = (props: ClassificationProps) => {
     const elapsed = await model.init();
     datadogLogs.logger.info("Model was created.", {
       demo: "classification",
-      modelPath: metadata.modelPath,
       elapsed_seconds: elapsed,
     });
     setModel({ instance: model });
@@ -114,7 +113,7 @@ const ClassificationComponent = (props: ClassificationProps) => {
       model: model.instance.metadata.title,
     });
     console.log(`Inference finished in ${result.elapsed} seconds.`);
-    setPredictions({ results: result.results });
+    setPredictions({ results: result.results as ClassificationPrediction[] });
     setStatus({ processing: false });
   };
 

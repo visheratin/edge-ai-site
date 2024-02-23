@@ -1,10 +1,10 @@
-import { ListTextModels, TextModelType } from "in-browser-ai";
+import { ListTextModels, ModelType } from "@visheratin/web-ai/text";
 import type { NextPage } from "next";
 import Head from "next/head";
 import GrammarCheckComponent from "../../components/grammar/grammar";
 
 const GrammarCheck: NextPage = () => {
-  const models = ListTextModels(["grammar"], TextModelType.Seq2Seq);
+  const models = ListTextModels(["summarization"], ModelType.Seq2Seq);
   return (
     <>
       <Head>

@@ -6,7 +6,7 @@ import {
   ImageMetadata,
   ObjectDetectionModel,
   ObjectDetectionPrediction,
-} from "in-browser-ai";
+} from "@visheratin/web-ai/image";
 
 interface ObjectDetectionProps {
   models: ImageMetadata[];
@@ -66,7 +66,6 @@ const ObjectDetectionComponent = (props: ObjectDetectionProps) => {
     const elapsed = await model.init();
     datadogLogs.logger.info("Model was created.", {
       demo: "object_detection",
-      modelPath: metadata.modelPath,
       elapsed_seconds: elapsed,
     });
     setModel({ instance: model });

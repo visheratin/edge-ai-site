@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { AppProps } from "next/app";
 import Layout from "../components/layout";
 import "@datadog/browser-logs/bundle/datadog-logs";
@@ -7,6 +6,7 @@ import Head from "next/head";
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
+    // @ts-ignore
     window.DD_LOGS.init({
       clientToken: "pubbcec946de66758406c3148a041c25dde",
       site: "datadoghq.com",

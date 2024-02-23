@@ -2,7 +2,7 @@ import Jimp from "jimp";
 import { useLayoutEffect, useRef, useState } from "react";
 import ExampleImages from "../exampleImages";
 import { datadogLogs } from "@datadog/browser-logs";
-import { ImageMetadata, SegmentationModel } from "in-browser-ai";
+import { ImageMetadata, SegmentationModel } from "@visheratin/web-ai/image";
 
 interface SegmentationProps {
   models: ImageMetadata[];
@@ -31,7 +31,6 @@ const SegmentationComponent = (props: SegmentationProps) => {
     const elapsed = await model.init();
     datadogLogs.logger.info("Model was created.", {
       demo: "segmentation",
-      modelPath: metadata.modelPath,
       elapsed_seconds: elapsed,
     });
     setModel({ instance: model });
@@ -136,11 +135,11 @@ const SegmentationComponent = (props: SegmentationProps) => {
     var destCtx = canvas!.getContext("2d");
     destCtx!.globalAlpha = 0.4;
     destCtx!.drawImage(
-      result.data,
+      result.canvas,
       0,
       0,
-      result.data.width,
-      result.data.height,
+      result.canvas.width,
+      result.canvas.height,
       0,
       0,
       canvas!.width,

@@ -1,10 +1,10 @@
-import { ListImageModels, ImageModelType } from "in-browser-ai";
+import { ListImageModels, ModelType } from "@visheratin/web-ai/image";
 import type { NextPage } from "next";
 import Head from "next/head";
 import SegmentationComponent from "../../components/segmentation/segmentation";
 
 const SEMSegmentation: NextPage = () => {
-  const models = ListImageModels(undefined, ImageModelType.Segmentation);
+  const models = ListImageModels(undefined, ModelType.Segmentation);
   return (
     <>
       <Head>

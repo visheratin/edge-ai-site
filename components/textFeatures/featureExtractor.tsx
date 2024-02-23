@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { datadogLogs } from "@datadog/browser-logs";
-import { FeatureExtractionModel, TextMetadata } from "in-browser-ai";
+import { FeatureExtractionModel, TextMetadata } from "@visheratin/web-ai/text";
 
 interface GrammarProps {
   models: TextMetadata[];
@@ -72,7 +72,7 @@ const FeatureExtractorComponent = (props: GrammarProps) => {
         `Sentence of length ${value2.length} (${result2.tokensNum} tokens) was processed in ${result2.elapsed} seconds`
       );
     }
-    const sim = cosineSim(result1.result, result2.result);
+    const sim = cosineSim(result1.result as number[], result2.result as number[]);
     setOutput({ value: sim.toString() });
     setStatus({ processing: false });
   };
