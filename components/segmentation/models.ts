@@ -19,7 +19,7 @@ export const semSegmentationModels: ImageMetadata[] = [
     modelPaths: new Map<string, string>([
       [
         "model",
-        "https://edge-ai-models.s3.us-east-2.amazonaws.com/sem-segment/b0.onnx.gz",
+        "https://edge-ai-models.s3.us-east-2.amazonaws.com/sem-segment/model_quant.onnx",
       ],
     ]),
     configPath:
